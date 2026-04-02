@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>נחש ת'מילה 🎉</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;900&display=swap');
+
+  :root {
+    --bg: #0d0d14;
+    --surface: #16161f;
+    --surface2: #1e1e2e;
+    --green: #22c55e;
+    --red: #ef4444;
+    --blue: #38bdf8;
+    --yellow: #facc15;
+    --text: #f1f5f9;
+    --text-dim: #94a3b8;
+    --border: #2d2d3d;
+    --radius: 18px;
+    --radius-sm: 10px;
+    --header-h: 52px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; font-family: 'Heebo', sans-serif; background: var(--bg); color: var(--text); overflow: hidden; touch-action: manipulation; }
+
+  /* ===== GLOBAL HEADER ===== */
+  .page-header {
+    position: fixed; top: 0; left: 0; right: 0;
+    height: var(--header-h);
+    background: var(--surface); border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 16px; z-index: 100; direction: rtl;
+  }
+  .page-header-title {
+    font-size: 1.05rem; font-weight: 900; letter-spacing: -0.5px;
+    background: linear-gradient(135deg, var(--yellow) 0%, #f97316 60%, #ef4444 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+  .header-btn {
+    background: var(--surface2); border: 1px solid var(--border); border-radius: 10px;
+    color: var(--text); font-family: 'Heebo', sans-serif; font-size: .85rem; font-weight: 700;
+    padding: 7px 13px; cursor: pointer; display: flex; align-items: center; gap: 5px;
+    transition: transform .1s, filter .1s;
+  }
+  .header-btn:active { transform: scale(.94); filter: brightness(.85); }
+
+  /* ===== SCREEN SYSTEM ===== */
+  .screen {
+    display: none; position: fixed; inset: 0;
+    flex-direction: column; align-items: center;
+    overflow-y: auto; animation: fadeIn .22s ease;
+  }
+  .screen.active { display: flex; }
+  /* FIX: !important so it overrides any screen-level padding shorthand */
+  .screen.has-header { padding-top: var(--header-h) !important; }
+
+  @keyframes fadeIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+
+  /* ===== SHARED ===== */
+  .btn {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    width: 100%; padding: 18px 24px; border: none; border-radius: var(--radius);
+    font-family: 'Heebo', sans-serif; font-size: 1.15rem; font-weight: 700;
+    cursor: pointer; transition: transform .12s, filter .12s; letter-spacing: 0.3px;
+  }
+  .btn:active { transform: scale(.96); filter: brightness(.88); }
+  .btn-primary { background: var(--yellow); color: #0d0d14; }
+  .btn-green   { background: var(--green);  color: #fff; }
+  .btn-red     { background: var(--red);    color: #fff; }
+  .btn-blue    { background: var(--blue);   color: #0d0d14; }
+
+  label { display: block; font-size: .82rem; font-weight: 700; color: var(--text-dim); margin-bottom: 6px; text-transform: uppercase; letter-spacing: .5px; }
+
+  input, select {
+    width: 100%; padding: 14px 16px; background: var(--surface2); border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm); color: var(--text);
+    font-family: 'Heebo', sans-serif; font-size: 1rem; font-weight: 600;
+    outline: none; transition: border-color .2s; direction: rtl;
+  }
+  input:focus, select:focus { border-color: var(--yellow); }
+  select option { background: var(--surface2); }
+
+  /* ===== SCREEN 1: START ===== */
+  #screen-start { padding: 20px 20px 44px; gap: 0; background: var(--bg); }
+
+  .logo { text-align: center; margin: 12px 0 24px; }
+  .logo-text {
+    font-size: 3rem; font-weight: 900; letter-spacing: -2px;
+    background: linear-gradient(135deg, var(--yellow) 0%, #f97316 50%, #ef4444 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; line-height: 1;
+  }
+  .logo-sub { font-size: .85rem; color: var(--text-dim); letter-spacing: 3px; text-transform: uppercase; margin-top: 5px; }
+
+  .form-section { width: 100%; margin-bottom: 14px; }
+  .form-section > label { margin-bottom: 10px; }
+
+  /* ---- Team input row with emoji + color ---- */
+  .teams-grid { display: flex; flex-direction: column; gap: 9px; margin-top: 4px; }
+  .team-input-row {
+    display: flex; align-items: center; gap: 8px;
+    background: var(--surface2); border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm); padding: 5px 12px;
+    transition: border-color .2s;
+  }
+  .team-input-row:focus-within { border-color: var(--yellow); }
+  .team-emoji-btn {
+    font-size: 1.35rem; background: none; border: none; cursor: pointer;
+    padding: 4px 6px; border-radius: 8px; transition: background .15s; flex-shrink: 0;
+  }
+  .team-emoji-btn:active { background: var(--border); }
+  .team-color-dot {
+    width: 14px; height: 14px; border-radius: 50%; flex-shrink: 0;
+    cursor: pointer; border: 2px solid rgba(255,255,255,.25);
+    transition: transform .15s, box-shadow .15s;
+  }
+  .team-color-dot:active { transform: scale(.85); }
+  .team-color-dot:hover  { box-shadow: 0 0 0 3px rgba(255,255,255,.15); }
+  .team-input-row input  { background: transparent; border: none; padding: 10px 0; font-size: 1rem; flex: 1; }
+  .team-input-row input:focus { border: none; }
+
+  /* ---- Settings boxes ---- */
+  .settings-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .setting-box {
+    background: var(--surface2); border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm); padding: 14px 16px;
+    display: flex; flex-direction: column; gap: 6px;
+  }
+  .setting-box label { margin: 0; font-size: .72rem; }
+  .setting-box input { background: transparent; border: none; padding: 0; font-size: 1.4rem; font-weight: 900; text-align: center; }
+
+  /* ===== SCREEN 2: TRANSFER ===== */
+  #screen-transfer {
+    justify-content: center; padding: 24px; gap: 0;
+    background: radial-gradient(ellipse at 50% 30%, #1a1a2e 0%, var(--bg) 70%);
+  }
+  .transfer-emoji { font-size: 4.5rem; text-align: center; margin-bottom: 18px; animation: bounce 1.6s ease-in-out infinite; }
+  @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-12px)} }
+  .transfer-team { font-size: 2.2rem; font-weight: 900; text-align: center; margin-bottom: 8px; }
+  .transfer-label { font-size: 1rem; color: var(--text-dim); text-align: center; margin-bottom: 32px; line-height: 1.6; }
+
+  .scores-preview { width: 100%; display: flex; flex-direction: column; gap: 8px; margin-bottom: 28px; }
+  .score-row {
+    display: flex; justify-content: space-between; align-items: center;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 11px 16px;
+  }
+  .score-row.active-team { border-color: var(--yellow); background: rgba(250,204,21,.07); }
+  .score-name { font-weight: 700; font-size: .95rem; display: flex; align-items: center; gap: 6px; }
+  .score-val  { font-weight: 900; font-size: 1.15rem; color: var(--yellow); }
+
+  /* ===== SCREEN 3: GAME ===== */
+  #screen-game { justify-content: space-between; background: var(--bg); min-height: 100vh; }
+
+  .game-top { width: 100%; padding: 12px 16px 0; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .game-team-name { font-size: .95rem; font-weight: 700; color: var(--text-dim); flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+  .timer-wrap { position: relative; width: 64px; height: 64px; flex-shrink: 0; }
+  .timer-svg  { position: absolute; inset: 0; transform: rotate(-90deg); }
+  .timer-bg   { fill: none; stroke: var(--surface2); stroke-width: 5; }
+  .timer-arc  { fill: none; stroke: var(--green); stroke-width: 5; stroke-linecap: round; stroke-dasharray: 188.5; stroke-dashoffset: 0; transition: stroke-dashoffset 1s linear, stroke .5s; }
+  .timer-text { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 1.35rem; font-weight: 900; color: var(--text); }
+
+  .game-score-bubble { background: var(--surface2); border: 1px solid var(--border); border-radius: 24px; padding: 5px 13px; font-size: .9rem; font-weight: 900; }
+  .score-pos { color: var(--green); }
+  .score-neg { color: var(--red); }
+
+  .word-area { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 16px; width: 100%; }
+  .word-display {
+    font-size: clamp(2.6rem, 12vw, 4.2rem); font-weight: 900; text-align: center;
+    letter-spacing: -2px; line-height: 1.1; color: var(--text);
+    animation: wordPop .22s cubic-bezier(.175,.885,.32,1.275);
+    padding: 20px; background: var(--surface); border: 2px solid var(--border);
+    border-radius: 24px; width: 100%; min-height: 130px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  @keyframes wordPop { from{transform:scale(.85);opacity:0} to{transform:scale(1);opacity:1} }
+  .word-count { margin-top: 10px; font-size: .78rem; color: var(--text-dim); font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
+
+  .game-actions { width: 100%; padding: 12px 16px 28px; display: flex; flex-direction: column; gap: 11px; }
+  .action-row   { display: grid; grid-template-columns: 1fr 1fr; gap: 11px; }
+  .btn-action   { padding: 18px 10px; font-size: 1.05rem; border-radius: var(--radius); display: flex; flex-direction: column; align-items: center; gap: 4px; }
+  .btn-action .icon  { font-size: 1.5rem; }
+  .btn-action .label { font-size: .78rem; font-weight: 700; opacity: .8; }
+
+  /* ===== SCREEN 4: END OF TURN ===== */
+  #screen-endturn { justify-content: flex-start; padding: 20px 20px 44px; gap: 0; background: var(--bg); }
+
+  .endturn-header { text-align: center; margin-bottom: 20px; }
+  .endturn-emoji  { font-size: 3.2rem; display: block; margin-bottom: 8px; }
+  .endturn-team   { font-size: 1.5rem; font-weight: 900; }
+  /* FIX: plain color instead of gradient-clip (was invisible due to background-clip issue) */
+  .endturn-round-score { font-size: 5rem; font-weight: 900; text-align: center; line-height: 1; margin: 12px 0 4px; }
+  .endturn-round-label { font-size: .85rem; color: var(--text-dim); text-align: center; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; }
+
+  .endturn-breakdown { width: 100%; margin-bottom: 20px; display: flex; flex-direction: column; gap: 8px; }
+  .breakdown-item { display: flex; justify-content: space-between; align-items: center; padding: 11px 15px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); }
+  .breakdown-label { font-size: .88rem; color: var(--text-dim); font-weight: 700; }
+  .breakdown-val   { font-size: 1.05rem; font-weight: 900; }
+
+  .all-scores-title { font-size: .73rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; font-weight: 700; margin-bottom: 9px; width: 100%; }
+
+  .progress-bar-wrap { width: 100%; height: 6px; background: var(--surface2); border-radius: 3px; margin-bottom: 16px; overflow: hidden; }
+  .progress-bar-fill { height: 100%; background: linear-gradient(90deg, var(--yellow), var(--green)); border-radius: 3px; transition: width .5s ease; }
+
+  /* ===== SCREEN 5: WINNER ===== */
+  #screen-winner { justify-content: center; align-items: center; padding: 24px 20px 48px; gap: 0; background: radial-gradient(ellipse at 50% 40%, #1f2a0a 0%, var(--bg) 65%); text-align: center; }
+  .confetti-area  { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+  .confetti-piece { position: absolute; width: 10px; height: 10px; border-radius: 2px; animation: confetti-fall linear forwards; opacity: 0; }
+  @keyframes confetti-fall { 0%{transform:translateY(-20px) rotate(0deg);opacity:1} 100%{transform:translateY(110vh) rotate(720deg);opacity:.2} }
+  .winner-crown  { font-size: 4.5rem; margin-bottom: 14px; animation: pulse 1.5s ease-in-out infinite; }
+  @keyframes pulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.08)} }
+  .winner-label  { font-size: .9rem; color: var(--text-dim); font-weight: 700; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 6px; }
+  .winner-name   { font-size: 2.8rem; font-weight: 900; letter-spacing: -2px; margin-bottom: 5px; }
+  .winner-score  { font-size: 1.1rem; color: var(--text-dim); font-weight: 700; margin-bottom: 28px; }
+  .winner-podium { width: 100%; display: flex; flex-direction: column; gap: 8px; margin-bottom: 24px; }
+  .podium-row { display: flex; align-items: center; justify-content: space-between; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 13px 16px; }
+  .podium-row.first-place { border-color: var(--yellow); background: rgba(250,204,21,.09); }
+  .podium-rank  { font-size: 1.1rem; width: 26px; text-align: center; }
+  .podium-name  { flex: 1; font-weight: 700; font-size: .95rem; padding: 0 10px; display: flex; align-items: center; gap: 6px; }
+  .podium-score { font-size: 1.15rem; font-weight: 900; color: var(--yellow); }
+
+  /* ===== PICKER BOTTOM SHEET ===== */
+  #picker-backdrop {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,.65); z-index: 200;
+  }
+  #picker-backdrop.open { display: block; }
+  #picker-sheet {
+    display: none; position: fixed; bottom: 0; left: 0; right: 0;
+    background: var(--surface); border-top: 1px solid var(--border);
+    border-radius: 24px 24px 0 0; padding: 20px 20px 40px;
+    z-index: 201; max-height: 60vh; overflow-y: auto;
+    animation: slideUp .2s ease;
+  }
+  #picker-sheet.open { display: block; }
+  @keyframes slideUp { from{transform:translateY(100%)} to{transform:translateY(0)} }
+
+  .picker-handle { width: 40px; height: 4px; background: var(--border); border-radius: 2px; margin: 0 auto 18px; }
+  .picker-title  { font-size: .85rem; font-weight: 700; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; text-align: center; }
+
+  .color-grid { display: grid; grid-template-columns: repeat(8, 1fr); gap: 12px; }
+  .color-swatch {
+    width: 100%; aspect-ratio: 1; border-radius: 50%;
+    cursor: pointer; border: 3px solid transparent;
+    transition: transform .15s, border-color .15s, opacity .15s;
+  }
+  .color-swatch:active   { transform: scale(.88); }
+  .color-swatch.selected { border-color: #fff; transform: scale(1.12); }
+  .color-swatch.taken    { opacity: .2; cursor: not-allowed; position: relative; }
+
+  .emoji-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; }
+  .emoji-option {
+    font-size: 1.7rem; background: var(--surface2); border: 2px solid transparent;
+    border-radius: 12px; padding: 8px 4px; cursor: pointer; text-align: center;
+    transition: transform .15s, border-color .15s;
+  }
+  .emoji-option:active   { transform: scale(.88); }
+  .emoji-option.selected { border-color: var(--yellow); background: rgba(250,204,21,.12); }
+</style>
+</head>
+<body>
+
+<!-- ============================================================ -->
+<!-- GLOBAL PAGE HEADER                                          -->
+<!-- ============================================================ -->
+<div id="page-header" class="page-header" style="display:none">
+  <div class="page-header-title">נחש ת׳מילה</div>
+  <div id="header-left-slot"></div>
+</div>
+
+<!-- ============================================================ -->
+<!-- PICKER BOTTOM SHEET (shared)                                -->
+<!-- ============================================================ -->
+<div id="picker-backdrop" onclick="closePicker()"></div>
+<div id="picker-sheet">
+  <div class="picker-handle"></div>
+  <div class="picker-title" id="picker-title"></div>
+  <div id="picker-content"></div>
+</div>
+
+<!-- ===================== SCREEN 1: START ===================== -->
+<div id="screen-start" class="screen active">
+  <div class="logo">
+    <div class="logo-text">נחש ת׳מילה</div>
+    <div class="logo-sub">מסביר · מנחש · מנצח</div>
+  </div>
+
+  <div class="form-section" style="margin-bottom:12px">
+    <label>מספר קבוצות</label>
+    <select id="num-teams" onchange="onNumTeamsChange()">
+      <option value="2">2 קבוצות</option>
+      <option value="3">3 קבוצות</option>
+      <option value="4">4 קבוצות</option>
+      <option value="5">5 קבוצות</option>
+      <option value="6">6 קבוצות</option>
+    </select>
+  </div>
+
+  <div class="form-section" style="margin-bottom:12px">
+    <label>שמות הקבוצות</label>
+    <div class="teams-grid" id="team-inputs"></div>
+  </div>
+
+  <div class="form-section" style="margin-bottom:20px">
+    <label>הגדרות משחק</label>
+    <div class="settings-row">
+      <div class="setting-box">
+        <label>⏱ שניות לתור</label>
+        <!-- FIX: step="5" so arrows jump by 5 -->
+        <input type="number" id="round-time" value="60" min="20" max="180" step="5">
+      </div>
+      <div class="setting-box">
+        <label>🏆 נקודות לניצחון</label>
+        <!-- FIX: step="5" so arrows jump by 5 -->
+        <input type="number" id="target-score" value="30" min="10" max="200" step="5">
+      </div>
+    </div>
+  </div>
+
+  <div style="width:100%">
+    <button class="btn btn-primary" onclick="startGame()">🎮 התחל משחק!</button>
+  </div>
+</div>
+
+<!-- ===================== SCREEN 2: TRANSFER ===================== -->
+<div id="screen-transfer" class="screen has-header">
+  <div class="transfer-emoji">📱</div>
+  <div class="transfer-team" id="transfer-team-name">קבוצה א׳</div>
+  <div class="transfer-label">העבירו את הטלפון לקבוצה<br>ולחצו על "התחל תור" כשמוכנים</div>
+  <div class="scores-preview" id="scores-preview"></div>
+  <div style="width:100%">
+    <button class="btn btn-primary" onclick="startTurn()">▶ התחל תור</button>
+  </div>
+</div>
+
+<!-- ===================== SCREEN 3: GAME ===================== -->
+<div id="screen-game" class="screen has-header">
+  <div class="game-top">
+    <div class="game-team-name" id="game-team-name">קבוצה</div>
+    <div class="timer-wrap">
+      <svg class="timer-svg" viewBox="0 0 68 68">
+        <circle class="timer-bg" cx="34" cy="34" r="30"/>
+        <circle class="timer-arc" id="timer-arc" cx="34" cy="34" r="30"/>
+      </svg>
+      <div class="timer-text" id="timer-display">60</div>
+    </div>
+    <div class="game-score-bubble" id="round-score-display">0</div>
+  </div>
+
+  <div class="word-area">
+    <div class="word-display" id="word-display">מילה</div>
+    <div class="word-count" id="word-count"></div>
+  </div>
+
+  <div class="game-actions">
+    <button class="btn btn-green btn-action" onclick="handleCorrect()">
+      <span class="icon">✅</span><span class="label">נכון +1</span>
+    </button>
+    <div class="action-row">
+      <button class="btn btn-blue btn-action" onclick="handleSkip()">
+        <span class="icon">⏭</span><span class="label">דלג 0</span>
+      </button>
+      <button class="btn btn-red btn-action" onclick="handleWrong()">
+        <span class="icon">❌</span><span class="label">טעות -1</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== SCREEN 4: END OF TURN ===================== -->
+<div id="screen-endturn" class="screen has-header">
+  <div class="endturn-header">
+    <span class="endturn-emoji" id="endturn-emoji">🎉</span>
+    <div class="endturn-team" id="endturn-team-name">קבוצה</div>
+  </div>
+  <div class="endturn-round-score" id="endturn-round-score">0</div>
+  <div class="endturn-round-label">נקודות בתור</div>
+  <div class="endturn-breakdown" id="endturn-breakdown"></div>
+  <div class="all-scores-title">📊 ניקוד כולל</div>
+  <div class="scores-preview" id="endturn-scores"></div>
+  <div style="width:100%; margin-top:20px">
+    <div class="progress-bar-wrap">
+      <div class="progress-bar-fill" id="winner-progress-fill" style="width:0%"></div>
+    </div>
+    <button class="btn btn-primary" onclick="nextTeam()">➡ לתור הבא</button>
+  </div>
+</div>
+
+<!-- ===================== SCREEN 5: WINNER ===================== -->
+<div id="screen-winner" class="screen has-header">
+  <div class="confetti-area" id="confetti-area"></div>
+  <div class="winner-crown">👑</div>
+  <div class="winner-label">המנצחת</div>
+  <div class="winner-name" id="winner-name">קבוצה א׳</div>
+  <div class="winner-score" id="winner-score-label"></div>
+  <div class="winner-podium" id="winner-podium"></div>
+  <button class="btn btn-primary" onclick="newGame()" style="width:100%">🔄 משחק חדש</button>
+</div>
+
+<script>
+// ========================= WORDS =========================
+const ALL_WORDS = [
+  "כלב","חתול","בית","ים","שמש","ירח","כוכב","ספר","מחשב","טלפון",
+  "מכונית","אוטובוס","רכבת","מטוס","ספינה","אופניים","רופא","מורה","שוטר","טבח",
+  "שחקן","זמר","ציפור","דג","פרח","עץ","הר","נהר","מדבר","יער",
+  "גשם","שלג","ברק","רוח","קשת","ענן","אש","מים","קרח","חול",
+  "לחם","גבינה","עגבנייה","בצל","תפוח","בננה","ענב","תות","לימון","אבטיח",
+  "אריה","פיל","קוף","ג׳ירפה","זברה","נמר","פנגווין","לוויתן","תנין","נחש",
+  "כינור","גיטרה","פסנתר","תוף","חליל","חצוצרה","מיקרופון","שיר","ריקוד","מוזיקה",
+  "כדורגל","כדורסל","שחייה","ריצה","קפיצה","אגרוף","תחרות","אצטדיון","כדור","רשת",
+  "טלוויזיה","מצלמה","רדיו","עיתון","סרט","מחזה","ציור","פסל","שירה","תיאטרון",
+  "מטבח","חדר שינה","סלון","גינה","מרפסת","מחסן","גרם מדרגות","מעלית","גג","מרתף",
+  "חולצה","מכנסיים","שמלה","נעליים","כובע","מעיל","גרביים","תיק","שעון","טבעת",
+  "ירושלים","תל אביב","חיפה","אילת","נצרת","באר שבע","טבריה","אשדוד","נתניה","רחובות",
+  "ילד","ילדה","אמא","אבא","סבא","סבתא","אח","אחות","דוד","דודה",
+  "שולחן","כיסא","מיטה","ארון","מדף","מראה","שטיח","וילון","מנורה","כרית",
+  "עט","עיפרון","מחברת","לוח","מחק","סרגל","דבק","מספריים","מחדד","צבע",
+  "תה","קפה","מיץ","חלב","בירה","יין","קולה","שוקו","מרק","עוגה",
+  "פיצה","המבורגר","סושי","שוורמה","פלאפל","פסטה","סלט","סנדוויץ׳","גלידה","מאפה",
+  "קסם","חידה","פאזל","שח","קלפים","קוביות","בובה","לגו","ציפייה","הרפתקה",
+  "אהבה","שמחה","עצב","פחד","כעס","תקווה","גאווה","קנאה","בושה","הפתעה",
+  "עבודה","חופשה","שינה","אכילה","נסיעה","טיסה","שחרור","התחלה","פגישה","טיול",
+  "חנות","שוק","קניון","בנק","בית חולים","בית ספר","מסעדה","בית קפה","ספרייה","גן",
+  "שמים","כדור הארץ","ירח מלא","שקיעה","זריחה","קרני שמש","כוכב נופל","שביל החלב","אופק","גלקסיה",
+  "חלום","ניסיון","הצלחה","כישלון","דרך","מסע","מטרה","תוצאה","בחירה","שינוי",
+  "מלך","מלכה","נסיך","נסיכה","אביר","דרקון","אוצר","חרב","מגן","ארמון"
+];
+
+// ========================= COLOR + EMOJI POOLS =========================
+// 16 colors — א=ירוק, ב=אדום, ג=תכלת, ד=כתום, ה=סגול, ו=ורוד, + 10 more
+const COLOR_POOL = [
+  '#22c55e', // ירוק
+  '#ef4444', // אדום
+  '#38bdf8', // תכלת
+  '#f97316', // כתום
+  '#a855f7', // סגול
+  '#ec4899', // ורוד
+  '#facc15', // צהוב
+  '#14b8a6', // טורקיז
+  '#84cc16', // ליים
+  '#60a5fa', // כחול
+  '#f43f5e', // ורוד-אדום
+  '#8b5cf6', // סגול-כחול
+  '#06b6d4', // ציאן
+  '#fb923c', // כתום בהיר
+  '#e879f9', // פוקסיה
+  '#34d399', // מנטה
+];
+
+// 30 emojis
+const EMOJI_POOL = [
+  '🦁','🐯','🦊','🐺','🦅','🐉','🦋','🐬','🦄','🌟',
+  '⚡','🔥','💎','🎯','🏆','🎲','🚀','🌈','🦝','🐸',
+  '🦖','🐙','🎭','🎪','⚔️','🛡️','🌊','🏄','🎸','🦸',
+];
+
+const TEAM_DEFAULT_NAMES = ['קבוצה א׳','קבוצה ב׳','קבוצה ג׳','קבוצה ד׳','קבוצה ה׳','קבוצה ו׳'];
+
+// ========================= SETUP STATE =========================
+// Persists across team count changes; grows as needed
+let teamSetup = {
+  names:  [...TEAM_DEFAULT_NAMES],
+  colors: ['#22c55e','#ef4444','#38bdf8','#f97316','#a855f7','#ec4899'],
+  emojis: [], // filled on init
+};
+
+// ========================= GAME STATE =========================
+let gameState = {
+  teams: [], teamColors: [], teamEmojis: [], scores: [],
+  currentTeamIndex: 0,
+  roundScore: 0, roundCorrect: 0, roundSkip: 0, roundWrong: 0,
+  roundTime: 60, targetScore: 30,
+  timer: null, timeLeft: 60,
+  words: [], currentWordIndex: 0,
+};
+
+// ========================= PICKER STATE =========================
+let pickerState = { type: null, teamIndex: null };
+
+// ========================= INIT =========================
+window.addEventListener('DOMContentLoaded', () => {
+  // Random emoji for each of the 6 default teams
+  teamSetup.emojis = Array.from({ length: 6 }, () =>
+    EMOJI_POOL[Math.floor(Math.random() * EMOJI_POOL.length)]
+  );
+  updateTeamInputs();
+});
+
+// ========================= HEADER =========================
+function setHeader(show, leftHTML) {
+  const hdr  = document.getElementById('page-header');
+  const slot = document.getElementById('header-left-slot');
+  hdr.style.display = show ? 'flex' : 'none';
+  slot.innerHTML = leftHTML || '<div style="width:72px"></div>';
+}
+
+// ========================= TEAM INPUTS =========================
+function saveCurrentNames() {
+  const rows = document.querySelectorAll('#team-inputs .team-input-row');
+  rows.forEach((_, i) => {
+    const inp = document.getElementById(`team-name-${i}`);
+    if (inp) teamSetup.names[i] = inp.value;
+  });
+}
+
+function onNumTeamsChange() {
+  saveCurrentNames();
+  updateTeamInputs();
+}
+
+function updateTeamInputs() {
+  const n = parseInt(document.getElementById('num-teams').value);
+
+  // Extend teamSetup arrays if needed
+  for (let i = teamSetup.colors.length; i < n; i++) {
+    const taken = teamSetup.colors.slice(0, i);
+    const avail = COLOR_POOL.filter(c => !taken.includes(c));
+    teamSetup.colors.push(avail.length ? avail[0] : COLOR_POOL[i % COLOR_POOL.length]);
+    teamSetup.emojis.push(EMOJI_POOL[Math.floor(Math.random() * EMOJI_POOL.length)]);
+    teamSetup.names.push(TEAM_DEFAULT_NAMES[i] || `קבוצה ${i + 1}`);
+  }
+
+  const container = document.getElementById('team-inputs');
+  container.innerHTML = '';
+  for (let i = 0; i < n; i++) {
+    const row = document.createElement('div');
+    row.className = 'team-input-row';
+    row.id = `team-row-${i}`;
+    row.innerHTML = `
+      <button class="team-emoji-btn" onclick="openPicker('emoji',${i})">${teamSetup.emojis[i]}</button>
+      <div class="team-color-dot" id="color-dot-${i}"
+           style="background:${teamSetup.colors[i]}"
+           onclick="openPicker('color',${i})"></div>
+      <input type="text" placeholder="${TEAM_DEFAULT_NAMES[i] || `קבוצה ${i+1}`}"
+             id="team-name-${i}" value="${teamSetup.names[i] || TEAM_DEFAULT_NAMES[i]}">
+    `;
+    container.appendChild(row);
+  }
+}
+
+// ========================= PICKER =========================
+function openPicker(type, teamIndex) {
+  pickerState = { type, teamIndex };
+  const title   = document.getElementById('picker-title');
+  const content = document.getElementById('picker-content');
+  const n       = parseInt(document.getElementById('num-teams').value);
+
+  if (type === 'color') {
+    title.textContent = 'בחר צבע לקבוצה';
+    const takenByOthers = teamSetup.colors.slice(0, n).filter((_, i) => i !== teamIndex);
+    content.innerHTML = '<div class="color-grid">' +
+      COLOR_POOL.map(c => {
+        const taken    = takenByOthers.includes(c);
+        const selected = teamSetup.colors[teamIndex] === c;
+        return `<div class="color-swatch ${taken ? 'taken' : ''} ${selected ? 'selected' : ''}"
+          style="background:${c}"
+          onclick="${taken ? 'void 0' : `selectColor('${c}',${teamIndex})`}"></div>`;
+      }).join('') + '</div>';
+  } else {
+    title.textContent = 'בחר אימוג׳י לקבוצה';
+    content.innerHTML = '<div class="emoji-grid">' +
+      EMOJI_POOL.map(e =>
+        `<div class="emoji-option ${teamSetup.emojis[teamIndex] === e ? 'selected' : ''}"
+          onclick="selectEmoji('${e}',${teamIndex})">${e}</div>`
+      ).join('') + '</div>';
+  }
+
+  document.getElementById('picker-backdrop').classList.add('open');
+  document.getElementById('picker-sheet').classList.add('open');
+}
+
+function selectColor(color, teamIndex) {
+  teamSetup.colors[teamIndex] = color;
+  // Update dot in-place (no full re-render, preserves typed names)
+  const dot = document.getElementById(`color-dot-${teamIndex}`);
+  if (dot) dot.style.background = color;
+  closePicker();
+  // Re-open with updated state so other swatches reflect change
+}
+
+function selectEmoji(emoji, teamIndex) {
+  teamSetup.emojis[teamIndex] = emoji;
+  const btn = document.querySelector(`#team-row-${teamIndex} .team-emoji-btn`);
+  if (btn) btn.textContent = emoji;
+  closePicker();
+}
+
+function closePicker() {
+  document.getElementById('picker-backdrop').classList.remove('open');
+  document.getElementById('picker-sheet').classList.remove('open');
+}
+
+// ========================= START GAME =========================
+function startGame() {
+  saveCurrentNames();
+  const n = parseInt(document.getElementById('num-teams').value);
+  gameState.teams      = [];
+  gameState.teamColors = [];
+  gameState.teamEmojis = [];
+  gameState.scores     = [];
+  for (let i = 0; i < n; i++) {
+    gameState.teams.push(teamSetup.names[i] || TEAM_DEFAULT_NAMES[i]);
+    gameState.teamColors.push(teamSetup.colors[i]);
+    gameState.teamEmojis.push(teamSetup.emojis[i]);
+    gameState.scores.push(0);
+  }
+  gameState.roundTime   = Math.max(20, parseInt(document.getElementById('round-time').value) || 60);
+  gameState.targetScore = Math.max(10, parseInt(document.getElementById('target-score').value) || 30);
+  gameState.currentTeamIndex = 0;
+  gameState.words = shuffle([...ALL_WORDS]);
+  gameState.currentWordIndex = 0;
+  showTransfer();
+}
+
+// ========================= SCREENS =========================
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+// ========================= TRANSFER =========================
+function showTransfer() {
+  const idx = gameState.currentTeamIndex;
+  const el  = document.getElementById('transfer-team-name');
+  el.textContent = `${gameState.teamEmojis[idx]} ${gameState.teams[idx]}`;
+  el.style.color = gameState.teamColors[idx];
+  renderScoresPreview('scores-preview');
+  setHeader(true, `<button class="header-btn" onclick="goHome()">🏠 בית</button>`);
+  showScreen('screen-transfer');
+}
+
+function renderScoresPreview(containerId) {
+  const el = document.getElementById(containerId);
+  el.innerHTML = '';
+  gameState.teams.forEach((name, i) => {
+    const row = document.createElement('div');
+    row.className = 'score-row' + (i === gameState.currentTeamIndex ? ' active-team' : '');
+    row.innerHTML = `
+      <div class="score-name" style="color:${gameState.teamColors[i]}">
+        <span>${gameState.teamEmojis[i]}</span><span>${name}</span>
+      </div>
+      <div class="score-val">${gameState.scores[i]}</div>
+    `;
+    el.appendChild(row);
+  });
+}
+
+// ========================= START TURN =========================
+function startTurn() {
+  gameState.roundScore = gameState.roundCorrect = gameState.roundSkip = gameState.roundWrong = 0;
+  gameState.timeLeft = gameState.roundTime;
+
+  const idx    = gameState.currentTeamIndex;
+  const nameEl = document.getElementById('game-team-name');
+  nameEl.textContent = `${gameState.teamEmojis[idx]} ${gameState.teams[idx]}`;
+  nameEl.style.color = gameState.teamColors[idx];
+
+  updateRoundScoreDisplay();
+  showNextWord();
+  updateTimer();
+  startTimer();
+  setHeader(true, `<button class="header-btn" onclick="abortTurn()">⬅ חזור</button>`);
+  showScreen('screen-game');
+}
+
+function abortTurn() {
+  if (!confirm('לחזור? הניקוד של התור הנוכחי לא יישמר.')) return;
+  clearInterval(gameState.timer);
+  showTransfer();
+}
+
+// ========================= TIMER =========================
+function startTimer() {
+  clearInterval(gameState.timer);
+  gameState.timer = setInterval(() => {
+    gameState.timeLeft--;
+    updateTimer();
+    if (gameState.timeLeft <= 0) { clearInterval(gameState.timer); endTurn(); }
+  }, 1000);
+}
+
+function updateTimer() {
+  const el  = document.getElementById('timer-display');
+  const arc = document.getElementById('timer-arc');
+  const pct = gameState.timeLeft / gameState.roundTime;
+  el.textContent = gameState.timeLeft;
+  arc.style.strokeDashoffset = 188.5 * (1 - pct);
+  arc.style.stroke = pct > .5 ? '#22c55e' : pct > .25 ? '#facc15' : '#ef4444';
+  if (gameState.timeLeft <= 5) vibrate(50);
+}
+
+// ========================= WORDS =========================
+function showNextWord() {
+  if (gameState.currentWordIndex >= gameState.words.length) {
+    gameState.words = shuffle([...ALL_WORDS]);
+    gameState.currentWordIndex = 0;
+  }
+  const word = gameState.words[gameState.currentWordIndex];
+  const el = document.getElementById('word-display');
+  el.style.animation = 'none'; void el.offsetWidth; el.style.animation = '';
+  el.textContent = word;
+  document.getElementById('word-count').textContent =
+    `מילה ${gameState.currentWordIndex + 1} / ${gameState.words.length}`;
+}
+function nextWord() { gameState.currentWordIndex++; showNextWord(); }
+
+// ========================= ACTIONS =========================
+function handleCorrect() { gameState.roundScore++; gameState.roundCorrect++; updateRoundScoreDisplay(); nextWord(); vibrate([40,20,40]); }
+function handleSkip()    { gameState.roundSkip++;                             nextWord(); vibrate(30); }
+function handleWrong()   { gameState.roundScore--; gameState.roundWrong++;   updateRoundScoreDisplay(); nextWord(); vibrate([80,30,80]); }
+
+function updateRoundScoreDisplay() {
+  const el = document.getElementById('round-score-display');
+  const s  = gameState.roundScore;
+  el.innerHTML = s >= 0
+    ? `<span class="score-pos">+${s}</span>`
+    : `<span class="score-neg">${s}</span>`;
+}
+
+// ========================= END TURN =========================
+function endTurn() {
+  clearInterval(gameState.timer);
+  vibrate([100,50,100,50,200]);
+
+  const idx        = gameState.currentTeamIndex;
+  const actualGain = gameState.roundScore;
+  gameState.scores[idx] = Math.max(0, gameState.scores[idx] + actualGain);
+
+  const teamEl = document.getElementById('endturn-team-name');
+  teamEl.textContent = `${gameState.teamEmojis[idx]} ${gameState.teams[idx]}`;
+  teamEl.style.color = gameState.teamColors[idx];
+
+  // FIX: solid color instead of gradient-clip (was invisible in browsers)
+  const roundEl = document.getElementById('endturn-round-score');
+  roundEl.textContent = (actualGain >= 0 ? '+' : '') + actualGain;
+  roundEl.style.color = actualGain >= 0 ? '#facc15' : '#ef4444';
+
+  document.getElementById('endturn-emoji').textContent =
+    actualGain > 5 ? '🔥' : actualGain > 0 ? '🎉' : actualGain === 0 ? '😐' : '😬';
+
+  document.getElementById('endturn-breakdown').innerHTML = `
+    <div class="breakdown-item">
+      <span class="breakdown-label">✅ נכון</span>
+      <span class="breakdown-val" style="color:#22c55e">+${gameState.roundCorrect}</span>
+    </div>
+    <div class="breakdown-item">
+      <span class="breakdown-label">⏭ דלג</span>
+      <span class="breakdown-val" style="color:#38bdf8">0 (${gameState.roundSkip})</span>
+    </div>
+    <div class="breakdown-item">
+      <span class="breakdown-label">❌ טעות</span>
+      <span class="breakdown-val" style="color:#ef4444">-${gameState.roundWrong}</span>
+    </div>
+    <div class="breakdown-item" style="border-color:#facc15">
+      <span class="breakdown-label">📊 סה״כ</span>
+      <span class="breakdown-val" style="color:#facc15">${gameState.scores[idx]}</span>
+    </div>
+  `;
+
+  renderScoresPreview('endturn-scores');
+  const leading = Math.max(...gameState.scores);
+  document.getElementById('winner-progress-fill').style.width =
+    Math.min(100, (leading / gameState.targetScore) * 100) + '%';
+
+  setHeader(true, `<button class="header-btn" onclick="goHome()">🏠 בית</button>`);
+  showScreen('screen-endturn');
+}
+
+// ========================= NEXT TEAM =========================
+function nextTeam() {
+  if (checkWinner()) return;
+  gameState.currentTeamIndex = (gameState.currentTeamIndex + 1) % gameState.teams.length;
+  showTransfer();
+}
+
+function checkWinner() {
+  const winner = gameState.scores.findIndex(s => s >= gameState.targetScore);
+  if (winner === -1) return false;
+  showWinner(winner);
+  return true;
+}
+
+// ========================= WINNER =========================
+function showWinner(idx) {
+  const nameEl = document.getElementById('winner-name');
+  nameEl.textContent = `${gameState.teamEmojis[idx]} ${gameState.teams[idx]}`;
+  nameEl.style.color = gameState.teamColors[idx];
+  document.getElementById('winner-score-label').textContent = `${gameState.scores[idx]} נקודות`;
+
+  const sorted = gameState.teams
+    .map((name, i) => ({ name, score: gameState.scores[i], color: gameState.teamColors[i], emoji: gameState.teamEmojis[i] }))
+    .sort((a, b) => b.score - a.score);
+
+  const medals = ['🥇','🥈','🥉'];
+  document.getElementById('winner-podium').innerHTML = sorted.map((t, rank) => `
+    <div class="podium-row ${rank === 0 ? 'first-place' : ''}">
+      <span class="podium-rank">${medals[rank] || (rank + 1)}</span>
+      <span class="podium-name" style="color:${t.color}"><span>${t.emoji}</span><span>${t.name}</span></span>
+      <span class="podium-score">${t.score}</span>
+    </div>
+  `).join('');
+
+  setHeader(true, `<button class="header-btn" onclick="goHome()">🏠 בית</button>`);
+  launchConfetti();
+  vibrate([200,100,200,100,400]);
+  showScreen('screen-winner');
+}
+
+// ========================= HOME / NEW GAME =========================
+function goHome() {
+  if (!confirm('לחזור לדף הבית? המשחק הנוכחי יאופס.')) return;
+  clearInterval(gameState.timer);
+  setHeader(false, '');
+  showScreen('screen-start');
+}
+
+function newGame() {
+  clearInterval(gameState.timer);
+  setHeader(false, '');
+  showScreen('screen-start');
+}
+
+// ========================= CONFETTI =========================
+function launchConfetti() {
+  const area = document.getElementById('confetti-area');
+  area.innerHTML = '';
+  const colors = ['#facc15','#22c55e','#38bdf8','#f97316','#a855f7','#ec4899','#fff'];
+  for (let i = 0; i < 60; i++) {
+    const p = document.createElement('div');
+    p.className = 'confetti-piece';
+    p.style.cssText = `left:${Math.random()*100}%;background:${colors[~~(Math.random()*colors.length)]};width:${6+Math.random()*10}px;height:${6+Math.random()*10}px;border-radius:${Math.random()>.5?'50%':'2px'};animation-duration:${2+Math.random()*3}s;animation-delay:${Math.random()*1.5}s;`;
+    area.appendChild(p);
+  }
+}
+
+// ========================= UTILS =========================
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = ~~(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+function vibrate(p) { try { navigator.vibrate && navigator.vibrate(p); } catch(e) {} }
+</script>
+</body>
+</html>
