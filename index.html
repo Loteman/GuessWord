@@ -259,6 +259,64 @@
   }
   .emoji-option:active   { transform: scale(.88); }
   .emoji-option.selected { border-color: var(--yellow); background: rgba(250,204,21,.12); }
+
+  /* ===== HOME FOOTER ===== */
+  .home-footer {
+    width: 100%; display: flex; align-items: center; justify-content: center;
+    gap: 6px; padding: 20px 0 4px; margin-top: 8px;
+  }
+  .footer-link {
+    background: none; border: none; color: var(--text-dim);
+    font-family: 'Heebo', sans-serif; font-size: .82rem; font-weight: 700;
+    cursor: pointer; padding: 6px 10px; border-radius: 8px;
+    transition: color .15s, background .15s; letter-spacing: .2px;
+  }
+  .footer-link:active, .footer-link:hover { color: var(--text); background: var(--surface2); }
+  .footer-sep { color: var(--border); font-size: .9rem; user-select: none; }
+
+  /* ===== INFO BOTTOM SHEET ===== */
+  #info-backdrop {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,.65); z-index: 200;
+  }
+  #info-backdrop.open { display: block; }
+  #info-sheet {
+    display: none; position: fixed; bottom: 0; left: 0; right: 0;
+    background: var(--surface); border-top: 1px solid var(--border);
+    border-radius: 24px 24px 0 0; padding: 20px 24px 44px;
+    z-index: 201; max-height: 80vh; overflow-y: auto;
+    animation: slideUp .2s ease;
+  }
+  #info-sheet.open { display: block; }
+
+  .info-handle { width: 40px; height: 4px; background: var(--border); border-radius: 2px; margin: 0 auto 20px; }
+  .info-title  { font-size: 1.15rem; font-weight: 900; color: var(--text); margin-bottom: 20px; text-align: center; }
+
+  .rules-section { margin-bottom: 20px; }
+  .rules-section h3 { font-size: .78rem; font-weight: 700; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
+  .rules-section p  { font-size: .95rem; color: var(--text); line-height: 1.65; }
+
+  .rules-item {
+    display: flex; gap: 12px; align-items: flex-start;
+    background: var(--surface2); border-radius: 12px;
+    padding: 12px 14px; margin-bottom: 8px;
+  }
+  .rules-item .ri-icon { font-size: 1.2rem; flex-shrink: 0; margin-top: 1px; }
+  .rules-item .ri-text { font-size: .92rem; color: var(--text); line-height: 1.5; }
+  .rules-item .ri-text strong { color: var(--yellow); }
+
+  .about-link {
+    display: flex; align-items: center; justify-content: space-between;
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 12px; padding: 14px 16px; margin-bottom: 10px;
+    text-decoration: none; color: var(--text); transition: border-color .15s;
+  }
+  .about-link:active { border-color: var(--yellow); }
+  .about-link-label { font-size: .95rem; font-weight: 700; }
+  .about-link-sub   { font-size: .78rem; color: var(--text-dim); margin-top: 2px; }
+  .about-link-arrow { font-size: 1rem; color: var(--text-dim); }
+
+  .about-tm { text-align: center; font-size: .78rem; color: var(--text-dim); margin-top: 18px; line-height: 1.6; }
 </style>
 </head>
 <body>
@@ -274,6 +332,16 @@
 <!-- ============================================================ -->
 <!-- PICKER BOTTOM SHEET (shared)                                -->
 <!-- ============================================================ -->
+<!-- ============================================================ -->
+<!-- INFO BOTTOM SHEET (how-to-play + about)                    -->
+<!-- ============================================================ -->
+<div id="info-backdrop" onclick="closeInfo()"></div>
+<div id="info-sheet">
+  <div class="info-handle"></div>
+  <div class="info-title" id="info-title"></div>
+  <div id="info-content"></div>
+</div>
+
 <div id="picker-backdrop" onclick="closePicker()"></div>
 <div id="picker-sheet">
   <div class="picker-handle"></div>
@@ -322,6 +390,12 @@
 
   <div style="width:100%">
     <button class="btn btn-primary" onclick="startGame()">🎮 התחל משחק!</button>
+  </div>
+
+  <div class="home-footer">
+    <button class="footer-link" onclick="openInfo('rules')">❓ איך משחקים</button>
+    <span class="footer-sep">·</span>
+    <button class="footer-link" onclick="openInfo('about')">ℹ️ אודות</button>
   </div>
 </div>
 
@@ -846,6 +920,67 @@ function shuffle(arr) {
   return arr;
 }
 function vibrate(p) { try { navigator.vibrate && navigator.vibrate(p); } catch(e) {} }
+
+// ========================= INFO SHEET =========================
+function openInfo(type) {
+  const title   = document.getElementById('info-title');
+  const content = document.getElementById('info-content');
+
+  if (type === 'rules') {
+    title.textContent = '❓ איך משחקים';
+    content.innerHTML = `
+      <div class="rules-section">
+        <h3>📱 Pass &amp; Play</h3>
+        <p>המשחק מיועד לקבוצות שמסבירות ומנחשות תוך כדי העברת טלפון אחד בין כולם — אין צורך בכמה מכשירים.</p>
+      </div>
+
+      <div class="rules-section">
+        <h3>🎯 מטרת המשחק</h3>
+        <p>הקבוצה הראשונה שמגיעה ליעד הנקודות שנקבע — מנצחת!</p>
+      </div>
+
+      <div class="rules-section">
+        <h3>▶ מהלך תור</h3>
+        <div class="rules-item"><span class="ri-icon">1️⃣</span><span class="ri-text">המכשיר מועבר לקבוצה שמשחקת. <strong>לא מציצים למסך!</strong></span></div>
+        <div class="rules-item"><span class="ri-icon">2️⃣</span><span class="ri-text">שחקן אחד מסביר — שאר הקבוצה מנחשים.</span></div>
+        <div class="rules-item"><span class="ri-icon">3️⃣</span><span class="ri-text">המסביר <strong>לא רשאי</strong> לומר את המילה, צלילים דומים, או תרגום ישיר.</span></div>
+        <div class="rules-item"><span class="ri-icon">⏱</span><span class="ri-text">יש לנחש כמה שיותר מילים עד שהטיימר מסתיים.</span></div>
+      </div>
+
+      <div class="rules-section">
+        <h3>🔢 ניקוד</h3>
+        <div class="rules-item"><span class="ri-icon">✅</span><span class="ri-text"><strong>נכון</strong> — +1 נקודה</span></div>
+        <div class="rules-item"><span class="ri-icon">⏭</span><span class="ri-text"><strong>דלג</strong> — 0 נקודות (עוברים למילה הבאה)</span></div>
+        <div class="rules-item"><span class="ri-icon">❌</span><span class="ri-text"><strong>טעות</strong> — מינוס 1 נקודה</span></div>
+      </div>
+
+      <div class="rules-section">
+        <h3>🏆 ניצחון</h3>
+        <p>הקבוצה הראשונה שצוברת את יעד הנקודות שנקבע בהגדרות מנצחת!</p>
+      </div>
+    `;
+  } else {
+    title.textContent = 'ℹ️ אודות';
+    content.innerHTML = `
+      <a class="about-link" href="https://loteman.github.io/Loteman-Games/" target="_blank" rel="noopener">
+        <div>
+          <div class="about-link-label">🎮 Loteman Games</div>
+          <div class="about-link-sub">למשחקים נוספים — לחץ לביקור באתר</div>
+        </div>
+        <span class="about-link-arrow">↗</span>
+      </a>
+      <div class="about-tm">נחש ת׳מילה © 2026<br>כל הזכויות שמורות ל-Loteman Games</div>
+    `;
+  }
+
+  document.getElementById('info-backdrop').classList.add('open');
+  document.getElementById('info-sheet').classList.add('open');
+}
+
+function closeInfo() {
+  document.getElementById('info-backdrop').classList.remove('open');
+  document.getElementById('info-sheet').classList.remove('open');
+}
 </script>
 </body>
 </html>
