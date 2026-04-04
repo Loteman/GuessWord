@@ -4,6 +4,22 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>נחש ת'מילה 🎉</title>
+<script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js" async></script>
+<style>
+  /* Iconify icon sizing contexts */
+  iconify-icon { display: inline-flex; vertical-align: middle; flex-shrink: 0; }
+  /* Prevent iconify from swallowing click events on buttons */
+  button iconify-icon, a iconify-icon { pointer-events: none; }
+  .btn iconify-icon          { font-size: 1.4rem; width: 1.4rem; height: 1.4rem; }
+  .btn-action iconify-icon   { font-size: 1.7rem; width: 1.7rem; height: 1.7rem; }
+  .footer-link iconify-icon  { font-size: 1rem;  width: 1rem;  height: 1rem;  }
+  .header-btn  iconify-icon  { font-size: 1rem;  width: 1rem;  height: 1rem;  }
+  .setting-box label iconify-icon { font-size: .9rem; width: .9rem; height: .9rem; }
+  .all-scores-title iconify-icon  { font-size: .9rem; width: .9rem; height: .9rem; }
+  .ri-icon iconify-icon      { font-size: 1.2rem; width: 1.2rem; height: 1.2rem; }
+  .breakdown-label iconify-icon   { font-size: 1rem; width: 1rem; height: 1rem; }
+  .winner-crown iconify-icon { font-size: 4.5rem; width: 4.5rem; height: 4.5rem; color: var(--yellow); }
+  .transfer-emoji iconify-icon    { font-size: 4.5rem; width: 4.5rem; height: 4.5rem; }</style>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;900&display=swap');
 
@@ -83,7 +99,7 @@
   input:focus, select:focus { border-color: var(--yellow); }
   select option { background: var(--surface2); }
 
-  /* ===== SCREEN 1: START ===== */
+  /* All screens get enough top breathing room; has-header gets exactly the header height */
   #screen-start { padding: 20px 20px 44px; gap: 0; background: var(--bg); }
 
   .logo { text-align: center; margin: 12px 0 24px; }
@@ -152,7 +168,8 @@
   .score-val  { font-weight: 900; font-size: 1.15rem; color: var(--yellow); }
 
   /* ===== SCREEN 3: GAME ===== */
-  #screen-game { justify-content: space-between; background: var(--bg); min-height: 100vh; }
+  /* ===== SCREEN 3: GAME ===== */
+  #screen-game { justify-content: space-between; background: var(--bg); min-height: 100vh; padding: 0; }
 
   .game-top { width: 100%; padding: 12px 16px 0; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
   .game-team-name { font-size: .95rem; font-weight: 700; color: var(--text-dim); flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -376,12 +393,12 @@
     <label>הגדרות משחק</label>
     <div class="settings-row">
       <div class="setting-box">
-        <label>⏱ שניות לתור</label>
+        <label><iconify-icon icon="mdi:timer-outline"></iconify-icon> שניות לתור</label>
         <!-- FIX: step="5" so arrows jump by 5 -->
         <input type="number" id="round-time" value="60" min="20" max="180" step="5">
       </div>
       <div class="setting-box">
-        <label>🏆 נקודות לניצחון</label>
+        <label><iconify-icon icon="mdi:trophy-outline"></iconify-icon> נקודות לניצחון</label>
         <!-- FIX: step="5" so arrows jump by 5 -->
         <input type="number" id="target-score" value="30" min="10" max="200" step="5">
       </div>
@@ -389,24 +406,24 @@
   </div>
 
   <div style="width:100%">
-    <button class="btn btn-primary" onclick="startGame()">🎮 התחל משחק!</button>
+    <button type="button" class="btn btn-primary" onclick="startGame()"><iconify-icon icon="mdi:gamepad-variant-outline"></iconify-icon> התחל משחק!</button>
   </div>
 
   <div class="home-footer">
-    <button class="footer-link" onclick="openInfo('rules')">❓ איך משחקים</button>
+    <button class="footer-link" onclick="openInfo('rules')"><iconify-icon icon="mdi:help-circle-outline"></iconify-icon> איך משחקים</button>
     <span class="footer-sep">·</span>
-    <button class="footer-link" onclick="openInfo('about')">ℹ️ אודות</button>
+    <button class="footer-link" onclick="openInfo('about')"><iconify-icon icon="mdi:information-outline"></iconify-icon> אודות</button>
   </div>
 </div>
 
 <!-- ===================== SCREEN 2: TRANSFER ===================== -->
 <div id="screen-transfer" class="screen has-header">
-  <div class="transfer-emoji">📱</div>
+  <div class="transfer-emoji"><iconify-icon icon="mdi:cellphone-arrow-down-variant"></iconify-icon></div>
   <div class="transfer-team" id="transfer-team-name">קבוצה א׳</div>
   <div class="transfer-label">העבירו את הטלפון לקבוצה<br>ולחצו על "התחל תור" כשמוכנים</div>
   <div class="scores-preview" id="scores-preview"></div>
   <div style="width:100%">
-    <button class="btn btn-primary" onclick="startTurn()">▶ התחל תור</button>
+    <button class="btn btn-primary" onclick="startTurn()"><iconify-icon icon="mdi:play-circle-outline"></iconify-icon> התחל תור</button>
   </div>
 </div>
 
@@ -431,14 +448,14 @@
 
   <div class="game-actions">
     <button class="btn btn-green btn-action" onclick="handleCorrect()">
-      <span class="icon">✅</span><span class="label">נכון +1</span>
+      <iconify-icon icon="mdi:check-circle-outline"></iconify-icon><span class="label">נכון +1</span>
     </button>
     <div class="action-row">
       <button class="btn btn-blue btn-action" onclick="handleSkip()">
-        <span class="icon">⏭</span><span class="label">דלג 0</span>
+        <iconify-icon icon="mdi:skip-next-circle-outline"></iconify-icon><span class="label">דלג 0</span>
       </button>
       <button class="btn btn-red btn-action" onclick="handleWrong()">
-        <span class="icon">❌</span><span class="label">טעות -1</span>
+        <iconify-icon icon="mdi:close-circle-outline"></iconify-icon><span class="label">טעות -1</span>
       </button>
     </div>
   </div>
@@ -453,25 +470,25 @@
   <div class="endturn-round-score" id="endturn-round-score">0</div>
   <div class="endturn-round-label">נקודות בתור</div>
   <div class="endturn-breakdown" id="endturn-breakdown"></div>
-  <div class="all-scores-title">📊 ניקוד כולל</div>
+  <div class="all-scores-title"><iconify-icon icon="mdi:chart-bar"></iconify-icon> ניקוד כולל</div>
   <div class="scores-preview" id="endturn-scores"></div>
   <div style="width:100%; margin-top:20px">
     <div class="progress-bar-wrap">
       <div class="progress-bar-fill" id="winner-progress-fill" style="width:0%"></div>
     </div>
-    <button class="btn btn-primary" onclick="nextTeam()">➡ לתור הבא</button>
+    <button class="btn btn-primary" onclick="nextTeam()"><iconify-icon icon="mdi:arrow-left-circle-outline"></iconify-icon> לתור הבא</button>
   </div>
 </div>
 
 <!-- ===================== SCREEN 5: WINNER ===================== -->
 <div id="screen-winner" class="screen has-header">
   <div class="confetti-area" id="confetti-area"></div>
-  <div class="winner-crown">👑</div>
+  <div class="winner-crown"><iconify-icon icon="mdi:crown-outline"></iconify-icon></div>
   <div class="winner-label">המנצחת</div>
   <div class="winner-name" id="winner-name">קבוצה א׳</div>
   <div class="winner-score" id="winner-score-label"></div>
   <div class="winner-podium" id="winner-podium"></div>
-  <button class="btn btn-primary" onclick="newGame()" style="width:100%">🔄 משחק חדש</button>
+  <button class="btn btn-primary" onclick="newGame()" style="width:100%"><iconify-icon icon="mdi:refresh"></iconify-icon> משחק חדש</button>
 </div>
 
 <script>
@@ -597,6 +614,11 @@ let pickerState = { type: null, teamIndex: null };
 
 // ========================= INIT =========================
 window.addEventListener('DOMContentLoaded', () => {
+  // Initialize display system — show only screen-start
+  SCREEN_IDS.forEach(sid => {
+    const el = document.getElementById(sid);
+    if (el) el.style.display = sid === 'screen-start' ? 'flex' : 'none';
+  });
   // Random emoji for each of the 6 default teams
   teamSetup.emojis = Array.from({ length: 6 }, () =>
     EMOJI_POOL[Math.floor(Math.random() * EMOJI_POOL.length)]
@@ -710,31 +732,40 @@ function closePicker() {
 
 // ========================= START GAME =========================
 function startGame() {
-  saveCurrentNames();
-  const n = parseInt(document.getElementById('num-teams').value);
-  gameState.teams      = [];
-  gameState.teamColors = [];
-  gameState.teamEmojis = [];
-  gameState.scores     = [];
-  for (let i = 0; i < n; i++) {
-    gameState.teams.push(teamSetup.names[i] || TEAM_DEFAULT_NAMES[i]);
-    gameState.teamColors.push(teamSetup.colors[i]);
-    gameState.teamEmojis.push(teamSetup.emojis[i]);
-    gameState.scores.push(0);
+  try {
+    saveCurrentNames();
+    const n = parseInt(document.getElementById('num-teams').value);
+    gameState.teams      = [];
+    gameState.teamColors = [];
+    gameState.teamEmojis = [];
+    gameState.scores     = [];
+    for (let i = 0; i < n; i++) {
+      gameState.teams.push(teamSetup.names[i] || TEAM_DEFAULT_NAMES[i]);
+      gameState.teamColors.push(teamSetup.colors[i]);
+      gameState.teamEmojis.push(teamSetup.emojis[i]);
+      gameState.scores.push(0);
+    }
+    gameState.roundTime   = Math.max(20, parseInt(document.getElementById('round-time').value) || 60);
+    gameState.targetScore = Math.max(10, parseInt(document.getElementById('target-score').value) || 30);
+    gameState.currentTeamIndex = 0;
+    gameState.words = shuffle([...ALL_WORDS]);
+    gameState.currentWordIndex = 0;
+    showTransfer();
+  } catch(err) {
+    alert('שגיאה: ' + err.message);
+    console.error(err);
   }
-  gameState.roundTime   = Math.max(20, parseInt(document.getElementById('round-time').value) || 60);
-  gameState.targetScore = Math.max(10, parseInt(document.getElementById('target-score').value) || 30);
-  gameState.currentTeamIndex = 0;
-  gameState.words = shuffle([...ALL_WORDS]);
-  gameState.currentWordIndex = 0;
-  showTransfer();
 }
 
 // ========================= SCREENS =========================
+const SCREEN_IDS = ['screen-start','screen-transfer','screen-game','screen-endturn','screen-winner'];
+
 function showScreen(id) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  window.scrollTo(0, 0);
+  SCREEN_IDS.forEach(sid => {
+    const el = document.getElementById(sid);
+    if (el) el.style.display = (sid === id) ? 'flex' : 'none';
+  });
+  try { window.scrollTo(0, 0); } catch(e) {}
 }
 
 // ========================= TRANSFER =========================
@@ -744,7 +775,7 @@ function showTransfer() {
   el.textContent = `${gameState.teamEmojis[idx]} ${gameState.teams[idx]}`;
   el.style.color = gameState.teamColors[idx];
   renderScoresPreview('scores-preview');
-  setHeader(true, `<button class="header-btn" onclick="goHome()">🏠 בית</button>`);
+  setHeader(true, `<button class="header-btn" onclick="goHome()"><iconify-icon icon="mdi:home-outline"></iconify-icon> בית</button>`);
   showScreen('screen-transfer');
 }
 
@@ -775,10 +806,12 @@ function startTurn() {
   nameEl.style.color = gameState.teamColors[idx];
 
   updateRoundScoreDisplay();
+  // Skip the word that was on-screen when the previous turn ended
+  if (gameState.currentWordIndex > 0) gameState.currentWordIndex++;
   showNextWord();
   updateTimer();
   startTimer();
-  setHeader(true, `<button class="header-btn" onclick="abortTurn()">⬅ חזור</button>`);
+  setHeader(true, `<button class="header-btn" onclick="abortTurn()"><iconify-icon icon="mdi:arrow-right-circle-outline"></iconify-icon> חזור</button>`);
   showScreen('screen-game');
 }
 
@@ -859,19 +892,19 @@ function endTurn() {
 
   document.getElementById('endturn-breakdown').innerHTML = `
     <div class="breakdown-item">
-      <span class="breakdown-label">✅ נכון</span>
+      <span class="breakdown-label"><iconify-icon icon="mdi:check-circle-outline" style="color:#22c55e"></iconify-icon> נכון</span>
       <span class="breakdown-val" style="color:#22c55e">+${gameState.roundCorrect}</span>
     </div>
     <div class="breakdown-item">
-      <span class="breakdown-label">⏭ דלג</span>
+      <span class="breakdown-label"><iconify-icon icon="mdi:skip-next-circle-outline" style="color:#38bdf8"></iconify-icon> דלג</span>
       <span class="breakdown-val" style="color:#38bdf8">0 (${gameState.roundSkip})</span>
     </div>
     <div class="breakdown-item">
-      <span class="breakdown-label">❌ טעות</span>
+      <span class="breakdown-label"><iconify-icon icon="mdi:close-circle-outline" style="color:#ef4444"></iconify-icon> טעות</span>
       <span class="breakdown-val" style="color:#ef4444">-${gameState.roundWrong}</span>
     </div>
     <div class="breakdown-item" style="border-color:#facc15">
-      <span class="breakdown-label">📊 סה״כ</span>
+      <span class="breakdown-label"><iconify-icon icon="mdi:chart-bar" style="color:#facc15"></iconify-icon> סה״כ</span>
       <span class="breakdown-val" style="color:#facc15">${gameState.scores[idx]}</span>
     </div>
   `;
@@ -881,7 +914,7 @@ function endTurn() {
   document.getElementById('winner-progress-fill').style.width =
     Math.min(100, (leading / gameState.targetScore) * 100) + '%';
 
-  setHeader(true, `<button class="header-btn" onclick="goHome()">🏠 בית</button>`);
+  setHeader(true, `<button class="header-btn" onclick="goHome()"><iconify-icon icon="mdi:home-outline"></iconify-icon> בית</button>`);
   showScreen('screen-endturn');
 }
 
@@ -919,7 +952,7 @@ function showWinner(idx) {
     </div>
   `).join('');
 
-  setHeader(true, `<button class="header-btn" onclick="goHome()">🏠 בית</button>`);
+  setHeader(true, `<button class="header-btn" onclick="goHome()"><iconify-icon icon="mdi:home-outline"></iconify-icon> בית</button>`);
   launchConfetti();
   vibrate([200,100,200,100,400]);
   showScreen('screen-winner');
@@ -968,47 +1001,47 @@ function openInfo(type) {
   const content = document.getElementById('info-content');
 
   if (type === 'rules') {
-    title.textContent = '❓ איך משחקים';
+    title.innerHTML = '<iconify-icon icon="mdi:help-circle-outline"></iconify-icon> איך משחקים';
     content.innerHTML = `
       <div class="rules-section">
-        <h3>📱 Pass &amp; Play</h3>
+        <h3><iconify-icon icon="mdi:cellphone-arrow-down-variant"></iconify-icon> Pass &amp; Play</h3>
         <p>המשחק מיועד לקבוצות שמסבירות ומנחשות תוך כדי העברת טלפון אחד בין כולם — אין צורך בכמה מכשירים.</p>
       </div>
 
       <div class="rules-section">
-        <h3>🎯 מטרת המשחק</h3>
+        <h3><iconify-icon icon="mdi:target"></iconify-icon> מטרת המשחק</h3>
         <p>הקבוצה הראשונה שמגיעה ליעד הנקודות שנקבע — מנצחת!</p>
       </div>
 
       <div class="rules-section">
-        <h3>▶ מהלך תור</h3>
-        <div class="rules-item"><span class="ri-icon">1️⃣</span><span class="ri-text">המכשיר מועבר לקבוצה שמשחקת. <strong>לא מציצים למסך!</strong></span></div>
-        <div class="rules-item"><span class="ri-icon">2️⃣</span><span class="ri-text">שחקן אחד מסביר — שאר הקבוצה מנחשים.</span></div>
-        <div class="rules-item"><span class="ri-icon">3️⃣</span><span class="ri-text">המסביר <strong>לא רשאי</strong> לומר את המילה, צלילים דומים, או תרגום ישיר.</span></div>
-        <div class="rules-item"><span class="ri-icon">⏱</span><span class="ri-text">יש לנחש כמה שיותר מילים עד שהטיימר מסתיים.</span></div>
+        <h3><iconify-icon icon="mdi:play-circle-outline"></iconify-icon> מהלך תור</h3>
+        <div class="rules-item"><span class="ri-icon"><iconify-icon icon="mdi:numeric-1-circle-outline"></iconify-icon></span><span class="ri-text">המכשיר מועבר לקבוצה שמשחקת. <strong>לא מציצים למסך!</strong></span></div>
+        <div class="rules-item"><span class="ri-icon"><iconify-icon icon="mdi:numeric-2-circle-outline"></iconify-icon></span><span class="ri-text">שחקן אחד מסביר — שאר הקבוצה מנחשים.</span></div>
+        <div class="rules-item"><span class="ri-icon"><iconify-icon icon="mdi:numeric-3-circle-outline"></iconify-icon></span><span class="ri-text">המסביר <strong>לא רשאי</strong> לומר את המילה, צלילים דומים, או תרגום ישיר.</span></div>
+        <div class="rules-item"><span class="ri-icon"><iconify-icon icon="mdi:timer-outline"></iconify-icon></span><span class="ri-text">יש לנחש כמה שיותר מילים עד שהטיימר מסתיים.</span></div>
       </div>
 
       <div class="rules-section">
-        <h3>🔢 ניקוד</h3>
-        <div class="rules-item"><span class="ri-icon">✅</span><span class="ri-text"><strong>נכון</strong> — +1 נקודה</span></div>
-        <div class="rules-item"><span class="ri-icon">⏭</span><span class="ri-text"><strong>דלג</strong> — 0 נקודות (עוברים למילה הבאה)</span></div>
-        <div class="rules-item"><span class="ri-icon">❌</span><span class="ri-text"><strong>טעות</strong> — מינוס 1 נקודה</span></div>
+        <h3><iconify-icon icon="mdi:counter"></iconify-icon> ניקוד</h3>
+        <div class="rules-item"><span class="ri-icon"><iconify-icon icon="mdi:check-circle-outline" style="color:#22c55e"></iconify-icon></span><span class="ri-text"><strong>נכון</strong> — +1 נקודה</span></div>
+        <div class="rules-item"><span class="ri-icon"><iconify-icon icon="mdi:skip-next-circle-outline" style="color:#38bdf8"></iconify-icon></span><span class="ri-text"><strong>דלג</strong> — 0 נקודות (עוברים למילה הבאה)</span></div>
+        <div class="rules-item"><span class="ri-icon"><iconify-icon icon="mdi:close-circle-outline" style="color:#ef4444"></iconify-icon></span><span class="ri-text"><strong>טעות</strong> — מינוס 1 נקודה</span></div>
       </div>
 
       <div class="rules-section">
-        <h3>🏆 ניצחון</h3>
+        <h3><iconify-icon icon="mdi:trophy-outline"></iconify-icon> ניצחון</h3>
         <p>הקבוצה הראשונה שצוברת את יעד הנקודות שנקבע בהגדרות מנצחת!</p>
       </div>
     `;
   } else {
-    title.textContent = 'ℹ️ אודות';
+    title.innerHTML = '<iconify-icon icon="mdi:information-outline"></iconify-icon> אודות';
     content.innerHTML = `
       <a class="about-link" href="https://loteman.github.io/Loteman-Games/" target="_blank" rel="noopener">
         <div>
-          <div class="about-link-label">🎮 Loteman Games</div>
+          <div class="about-link-label"><iconify-icon icon="mdi:gamepad-variant-outline"></iconify-icon> Loteman Games</div>
           <div class="about-link-sub">למשחקים נוספים — לחץ לביקור באתר</div>
         </div>
-        <span class="about-link-arrow">↗</span>
+        <iconify-icon icon="mdi:open-in-new" class="about-link-arrow"></iconify-icon>
       </a>
       <div class="about-tm">נחש ת׳מילה © 2026<br>כל הזכויות שמורות ל-Loteman Games</div>
     `;
