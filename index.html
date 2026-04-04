@@ -54,6 +54,8 @@
     font-size: 1.05rem; font-weight: 900; letter-spacing: -0.5px;
     background: linear-gradient(135deg, var(--yellow) 0%, #f97316 60%, #ef4444 100%);
     -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    /* button resets */
+    border: none; cursor: pointer; padding: 4px 0; font-family: inherit;
   }
   .header-btn {
     background: var(--surface2); border: 1px solid var(--border); border-radius: 10px;
@@ -320,8 +322,22 @@
   }
   #info-sheet.open { display: block; }
 
-  .info-handle { width: 40px; height: 4px; background: var(--border); border-radius: 2px; margin: 0 auto 20px; }
-  .info-title  { font-size: 1.15rem; font-weight: 900; color: var(--text); margin-bottom: 20px; text-align: center; }
+  .info-handle { width: 40px; height: 4px; background: var(--border); border-radius: 2px; margin: 0 auto 16px; }
+
+  /* ===== INFO TABS ===== */
+  .info-tabs {
+    display: flex; gap: 6px; margin-bottom: 20px;
+    background: var(--surface2); border-radius: 12px; padding: 4px;
+  }
+  .info-tab {
+    flex: 1; padding: 9px 12px; border: none; border-radius: 9px;
+    font-family: 'Heebo', sans-serif; font-size: .88rem; font-weight: 700;
+    cursor: pointer; color: var(--text-dim); background: transparent;
+    transition: background .15s, color .15s;
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+  }
+  .info-tab.active { background: var(--surface); color: var(--text); box-shadow: 0 1px 4px rgba(0,0,0,.4); }
+  .info-tab iconify-icon { pointer-events: none; font-size: 1rem; width: 1rem; height: 1rem; }
 
   .rules-section { margin-bottom: 20px; }
   .rules-section h3 { font-size: .78rem; font-weight: 700; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
@@ -356,7 +372,7 @@
 <!-- GLOBAL PAGE HEADER                                          -->
 <!-- ============================================================ -->
 <div id="page-header" class="page-header" style="display:none">
-  <div class="page-header-title">נחש ת׳מילה</div>
+  <button class="page-header-title" onclick="goHomeFromHeader()">נחש ת׳מילה</button>
   <div id="header-left-slot"></div>
 </div>
 
@@ -369,7 +385,14 @@
 <div id="info-backdrop" onclick="closeInfo()"></div>
 <div id="info-sheet">
   <div class="info-handle"></div>
-  <div class="info-title" id="info-title"></div>
+  <div class="info-tabs">
+    <button type="button" class="info-tab active" id="tab-rules" onclick="switchInfoTab('rules')">
+      <iconify-icon icon="mdi:help-circle-outline"></iconify-icon> איך משחקים
+    </button>
+    <button type="button" class="info-tab" id="tab-about" onclick="switchInfoTab('about')">
+      <iconify-icon icon="mdi:information-outline"></iconify-icon> אודות
+    </button>
+  </div>
   <div id="info-content"></div>
 </div>
 
@@ -648,6 +671,15 @@ function setHeader(show, leftHTML) {
   slot.innerHTML = leftHTML || '<div style="width:72px"></div>';
 }
 
+function goHomeFromHeader() {
+  if (!confirm('לחזור לדף הבית? המשחק הנוכחי יאופס.')) return;
+  clearInterval(gameState.timer);
+  setHeader(false, '');
+  showScreen('screen-start');
+}
+
+const HELP_BTN = `<button type="button" class="header-btn" onclick="openInfo('rules')"><iconify-icon icon="mdi:help-circle-outline"></iconify-icon> מידע</button>`;
+
 // ========================= TEAM INPUTS =========================
 function saveCurrentNames() {
   const rows = document.querySelectorAll('#team-inputs .team-input-row');
@@ -789,7 +821,7 @@ function showTransfer() {
   el.textContent = `${gameState.teamEmojis[idx]} ${gameState.teams[idx]}`;
   el.style.color = gameState.teamColors[idx];
   renderScoresPreview('scores-preview');
-  setHeader(true, `<button class="header-btn" onclick="goHome()"><iconify-icon icon="mdi:home-outline"></iconify-icon> בית</button>`);
+  setHeader(true, HELP_BTN);
   showScreen('screen-transfer');
 }
 
@@ -825,7 +857,7 @@ function startTurn() {
   showNextWord();
   updateTimer();
   startTimer();
-  setHeader(true, `<button class="header-btn" onclick="abortTurn()"><iconify-icon icon="mdi:arrow-right-circle-outline"></iconify-icon> חזור</button>`);
+  setHeader(true, `<button type="button" class="header-btn" onclick="abortTurn()"><iconify-icon icon="mdi:arrow-right-circle-outline"></iconify-icon> חזור</button>`);
   showScreen('screen-game');
 }
 
@@ -928,7 +960,7 @@ function endTurn() {
   document.getElementById('winner-progress-fill').style.width =
     Math.min(100, (leading / gameState.targetScore) * 100) + '%';
 
-  setHeader(true, `<button class="header-btn" onclick="goHome()"><iconify-icon icon="mdi:home-outline"></iconify-icon> בית</button>`);
+  setHeader(true, HELP_BTN);
   showScreen('screen-endturn');
 }
 
@@ -966,7 +998,7 @@ function showWinner(idx) {
     </div>
   `).join('');
 
-  setHeader(true, `<button class="header-btn" onclick="goHome()"><iconify-icon icon="mdi:home-outline"></iconify-icon> בית</button>`);
+  setHeader(true, HELP_BTN);
   launchConfetti();
   vibrate([200,100,200,100,400]);
   showScreen('screen-winner');
@@ -1010,59 +1042,65 @@ function shuffle(arr) {
 function vibrate(p) { try { navigator.vibrate && navigator.vibrate(p); } catch(e) {} }
 
 // ========================= INFO SHEET =========================
+const INFO_CONTENT = {
+  rules: `
+    <div class="rules-section">
+      <h3><iconify-icon icon="mdi:cellphone-arrow-down-variant"></iconify-icon> Pass &amp; Play</h3>
+      <p>המשחק מיועד לקבוצות שמסבירות ומנחשות תוך כדי העברת טלפון אחד בין כולם — אין צורך בכמה מכשירים.</p>
+    </div>
+    <div class="rules-section">
+      <h3><iconify-icon icon="mdi:target"></iconify-icon> מטרת המשחק</h3>
+      <p>הקבוצה הראשונה שמגיעה ליעד הנקודות שנקבע — מנצחת!</p>
+    </div>
+    <div class="rules-section">
+      <h3><iconify-icon icon="mdi:play-circle-outline"></iconify-icon> מהלך תור</h3>
+      <div class="rules-item"><span class="ri-icon"><iconify-icon icon="mdi:numeric-1-circle-outline"></iconify-icon></span><span class="ri-text">המכשיר מועבר לקבוצה שמשחקת. <strong>לא מציצים למסך!</strong></span></div>
+      <div class="rules-item"><span class="ri-icon"><iconify-icon icon="mdi:numeric-2-circle-outline"></iconify-icon></span><span class="ri-text">שחקן אחד מסביר — שאר הקבוצה מנחשים.</span></div>
+      <div class="rules-item"><span class="ri-icon"><iconify-icon icon="mdi:numeric-3-circle-outline"></iconify-icon></span><span class="ri-text">המסביר <strong>לא רשאי</strong> לומר את המילה, צלילים דומים, או תרגום ישיר.</span></div>
+      <div class="rules-item"><span class="ri-icon"><iconify-icon icon="mdi:timer-outline"></iconify-icon></span><span class="ri-text">יש לנחש כמה שיותר מילים עד שהטיימר מסתיים.</span></div>
+    </div>
+    <div class="rules-section">
+      <h3><iconify-icon icon="mdi:counter"></iconify-icon> ניקוד</h3>
+      <div class="rules-item"><span class="ri-icon"><iconify-icon icon="mdi:check-circle-outline" style="color:#22c55e"></iconify-icon></span><span class="ri-text"><strong>נכון</strong> — +1 נקודה</span></div>
+      <div class="rules-item"><span class="ri-icon"><iconify-icon icon="mdi:skip-next-circle-outline" style="color:#38bdf8"></iconify-icon></span><span class="ri-text"><strong>דלג</strong> — 0 נקודות (עוברים למילה הבאה)</span></div>
+      <div class="rules-item"><span class="ri-icon"><iconify-icon icon="mdi:close-circle-outline" style="color:#ef4444"></iconify-icon></span><span class="ri-text"><strong>טעות</strong> — מינוס 1 נקודה</span></div>
+    </div>
+    <div class="rules-section">
+      <h3><iconify-icon icon="mdi:trophy-outline"></iconify-icon> ניצחון</h3>
+      <p>הקבוצה הראשונה שצוברת את יעד הנקודות שנקבע בהגדרות מנצחת!</p>
+    </div>`,
+  about: `
+    <a class="about-link" href="https://loteman.github.io/Loteman-Games/" target="_blank" rel="noopener">
+      <div>
+        <div class="about-link-label"><iconify-icon icon="mdi:gamepad-variant-outline"></iconify-icon> Loteman Games</div>
+        <div class="about-link-sub">למשחקים נוספים — לחץ לביקור באתר</div>
+      </div>
+      <iconify-icon icon="mdi:open-in-new" class="about-link-arrow"></iconify-icon>
+    </a>
+    <div class="about-tm">נחש ת׳מילה © 2026<br>כל הזכויות שמורות ל-Loteman Games</div>`
+};
+
+let currentInfoTab = 'rules';
+
 function openInfo(type) {
-  const title   = document.getElementById('info-title');
-  const content = document.getElementById('info-content');
-
-  if (type === 'rules') {
-    title.innerHTML = '<iconify-icon icon="mdi:help-circle-outline"></iconify-icon> איך משחקים';
-    content.innerHTML = `
-      <div class="rules-section">
-        <h3><iconify-icon icon="mdi:cellphone-arrow-down-variant"></iconify-icon> Pass &amp; Play</h3>
-        <p>המשחק מיועד לקבוצות שמסבירות ומנחשות תוך כדי העברת טלפון אחד בין כולם — אין צורך בכמה מכשירים.</p>
-      </div>
-
-      <div class="rules-section">
-        <h3><iconify-icon icon="mdi:target"></iconify-icon> מטרת המשחק</h3>
-        <p>הקבוצה הראשונה שמגיעה ליעד הנקודות שנקבע — מנצחת!</p>
-      </div>
-
-      <div class="rules-section">
-        <h3><iconify-icon icon="mdi:play-circle-outline"></iconify-icon> מהלך תור</h3>
-        <div class="rules-item"><span class="ri-icon"><iconify-icon icon="mdi:numeric-1-circle-outline"></iconify-icon></span><span class="ri-text">המכשיר מועבר לקבוצה שמשחקת. <strong>לא מציצים למסך!</strong></span></div>
-        <div class="rules-item"><span class="ri-icon"><iconify-icon icon="mdi:numeric-2-circle-outline"></iconify-icon></span><span class="ri-text">שחקן אחד מסביר — שאר הקבוצה מנחשים.</span></div>
-        <div class="rules-item"><span class="ri-icon"><iconify-icon icon="mdi:numeric-3-circle-outline"></iconify-icon></span><span class="ri-text">המסביר <strong>לא רשאי</strong> לומר את המילה, צלילים דומים, או תרגום ישיר.</span></div>
-        <div class="rules-item"><span class="ri-icon"><iconify-icon icon="mdi:timer-outline"></iconify-icon></span><span class="ri-text">יש לנחש כמה שיותר מילים עד שהטיימר מסתיים.</span></div>
-      </div>
-
-      <div class="rules-section">
-        <h3><iconify-icon icon="mdi:counter"></iconify-icon> ניקוד</h3>
-        <div class="rules-item"><span class="ri-icon"><iconify-icon icon="mdi:check-circle-outline" style="color:#22c55e"></iconify-icon></span><span class="ri-text"><strong>נכון</strong> — +1 נקודה</span></div>
-        <div class="rules-item"><span class="ri-icon"><iconify-icon icon="mdi:skip-next-circle-outline" style="color:#38bdf8"></iconify-icon></span><span class="ri-text"><strong>דלג</strong> — 0 נקודות (עוברים למילה הבאה)</span></div>
-        <div class="rules-item"><span class="ri-icon"><iconify-icon icon="mdi:close-circle-outline" style="color:#ef4444"></iconify-icon></span><span class="ri-text"><strong>טעות</strong> — מינוס 1 נקודה</span></div>
-      </div>
-
-      <div class="rules-section">
-        <h3><iconify-icon icon="mdi:trophy-outline"></iconify-icon> ניצחון</h3>
-        <p>הקבוצה הראשונה שצוברת את יעד הנקודות שנקבע בהגדרות מנצחת!</p>
-      </div>
-    `;
-  } else {
-    title.innerHTML = '<iconify-icon icon="mdi:information-outline"></iconify-icon> אודות';
-    content.innerHTML = `
-      <a class="about-link" href="https://loteman.github.io/Loteman-Games/" target="_blank" rel="noopener">
-        <div>
-          <div class="about-link-label"><iconify-icon icon="mdi:gamepad-variant-outline"></iconify-icon> Loteman Games</div>
-          <div class="about-link-sub">למשחקים נוספים — לחץ לביקור באתר</div>
-        </div>
-        <iconify-icon icon="mdi:open-in-new" class="about-link-arrow"></iconify-icon>
-      </a>
-      <div class="about-tm">נחש ת׳מילה © 2026<br>כל הזכויות שמורות ל-Loteman Games</div>
-    `;
+  type = type || 'rules';
+  const isOpen = document.getElementById('info-sheet').classList.contains('open');
+  currentInfoTab = type;
+  // Update tab highlight
+  document.getElementById('tab-rules').classList.toggle('active', type === 'rules');
+  document.getElementById('tab-about').classList.toggle('active', type === 'about');
+  // Update content
+  document.getElementById('info-content').innerHTML = INFO_CONTENT[type];
+  // Only animate if sheet wasn't already open
+  if (!isOpen) {
+    document.getElementById('info-backdrop').classList.add('open');
+    document.getElementById('info-sheet').classList.add('open');
   }
+}
 
-  document.getElementById('info-backdrop').classList.add('open');
-  document.getElementById('info-sheet').classList.add('open');
+function switchInfoTab(type) {
+  // Sheet already open — switch content without re-animating
+  openInfo(type);
 }
 
 function closeInfo() {
