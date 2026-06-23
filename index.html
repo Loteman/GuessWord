@@ -100,6 +100,27 @@
   }
   input:focus, select:focus { border-color: var(--yellow); }
   select option { background: var(--surface2); }
+  /* Custom arrow — fixed position on the left, never shifts */
+  select {
+    appearance: none; -webkit-appearance: none; -moz-appearance: none;
+    padding-left: 40px;
+    background-repeat: no-repeat;
+    background-position: left 14px center;
+    background-size: 15px;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><path d='M6 9l6 6 6-6'/></svg>");
+  }
+
+  /* Icon-only help button floating top-left on home screen (no header there) */
+  .home-help-btn {
+    position: fixed; top: 10px; left: 12px; z-index: 100;
+    background: var(--surface2); border: 1px solid var(--border); border-radius: 10px;
+    color: var(--text-dim); padding: 9px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: filter .1s, border-color .15s, color .15s;
+  }
+  .home-help-btn:active { filter: brightness(.85); }
+  .home-help-btn:hover  { border-color: var(--yellow); color: var(--yellow); }
+  .home-help-btn iconify-icon { font-size: 1.1rem; width: 1.1rem; height: 1.1rem; pointer-events: none; }
 
   /* All screens get enough top breathing room; has-header gets exactly the header height */
   #screen-start { padding: 20px 20px 44px; gap: 0; background: var(--bg); }
@@ -405,6 +426,11 @@
 
 <!-- ===================== SCREEN 1: START ===================== -->
 <div id="screen-start" class="screen active">
+
+  <!-- Icon-only info button top-left, visible only on home screen -->
+  <button type="button" class="home-help-btn" onclick="openInfo('rules')">
+    <iconify-icon icon="mdi:help-circle-outline"></iconify-icon>
+  </button>
   <div class="logo">
     <div class="logo-text">נחש ת׳מילה</div>
     <div class="logo-sub">מסביר · מנחש · מנצח</div>
