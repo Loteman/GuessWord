@@ -18,7 +18,7 @@
   .all-scores-title iconify-icon  { font-size: .9rem; width: .9rem; height: .9rem; }
   .ri-icon iconify-icon      { font-size: 1.2rem; width: 1.2rem; height: 1.2rem; }
   .breakdown-label iconify-icon   { font-size: 1rem; width: 1rem; height: 1rem; }
-  .winner-crown iconify-icon { font-size: 4.5rem; width: 4.5rem; height: 4.5rem; color: var(--yellow); }
+  .winner-crown iconify-icon { font-size: 4.5rem; width: 4.5rem; height: 4.5rem; color: var(--accent); }
   .transfer-emoji iconify-icon    { font-size: 4.5rem; width: 4.5rem; height: 4.5rem; }</style>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;900&display=swap');
@@ -30,7 +30,7 @@
     --green: #22c55e;
     --red: #ef4444;
     --blue: #38bdf8;
-    --yellow: #facc15;
+    --accent: #facc15;
     --text: #f1f5f9;
     --text-dim: #94a3b8;
     --border: #2d2d3d;
@@ -52,7 +52,7 @@
   }
   .page-header-title {
     font-size: 1.05rem; font-weight: 900; letter-spacing: -0.5px;
-    background: linear-gradient(135deg, var(--yellow) 0%, #f97316 60%, #ef4444 100%);
+    background: linear-gradient(135deg, var(--accent) 0%, #f97316 60%, #ef4444 100%);
     -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
     /* button resets */
     border: none; cursor: pointer; padding: 4px 0; font-family: inherit;
@@ -85,8 +85,8 @@
     cursor: pointer; transition: transform .12s, filter .12s; letter-spacing: 0.3px;
   }
   .btn:active { transform: scale(.96); filter: brightness(.88); }
-  .btn:hover, .btn:active { outline: 2px solid var(--yellow); outline-offset: 2px; }
-  .btn-primary { background: var(--yellow); color: #0d0d14; }
+  .btn:hover, .btn:active { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .btn-primary { background: var(--accent); color: #0d0d14; }
   .btn-green   { background: var(--green);  color: #fff; }
   .btn-red     { background: var(--red);    color: #fff; }
   .btn-blue    { background: var(--blue);   color: #0d0d14; }
@@ -99,7 +99,7 @@
     font-family: 'Heebo', sans-serif; font-size: 1rem; font-weight: 600;
     outline: none; transition: border-color .2s; direction: rtl;
   }
-  input:focus, select:focus { border-color: var(--yellow); }
+  input:focus, select:focus { border-color: var(--accent); }
   select option { background: var(--surface2); }
   /* Custom arrow — fixed position on the left, never shifts */
   select {
@@ -120,11 +120,11 @@
     transition: filter .1s, border-color .15s, color .15s;
   }
   .home-help-btn:active { filter: brightness(.85); }
-  .home-help-btn:hover  { border-color: var(--yellow); color: var(--yellow); }
+  .home-help-btn:hover  { border-color: var(--accent); color: var(--accent); }
   .home-help-btn iconify-icon { font-size: 1.1rem; width: 1.1rem; height: 1.1rem; pointer-events: none; }
 
   /* All screens get enough top breathing room; has-header gets exactly the header height */
-  #screen-start { padding: 0; gap: 0; background: var(--bg); }
+  #screen-home { padding: 0; gap: 0; background: var(--bg); }
 
   .splash-desc {
     font-size: 1rem; color: var(--text-dim); text-align: center;
@@ -134,7 +134,7 @@
   .logo { text-align: center; margin: 12px 0 24px; }
   .logo-text {
     font-size: 3rem; font-weight: 900; letter-spacing: -2px;
-    background: linear-gradient(135deg, var(--yellow) 0%, #f97316 50%, #ef4444 100%);
+    background: linear-gradient(135deg, var(--accent) 0%, #f97316 50%, #ef4444 100%);
     -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; line-height: 1;
   }
   .logo-sub { font-size: .85rem; color: var(--text-dim); letter-spacing: 3px; text-transform: uppercase; margin-top: 5px; }
@@ -150,7 +150,7 @@
     border-radius: var(--radius-sm); padding: 5px 12px;
     transition: border-color .2s;
   }
-  .team-input-row:focus-within { border-color: var(--yellow); }
+  .team-input-row:focus-within { border-color: var(--accent); }
   .team-emoji-btn {
     font-size: 1.35rem; background: none; border: none; cursor: pointer;
     padding: 4px 6px; border-radius: 8px; transition: background .15s; flex-shrink: 0;
@@ -192,9 +192,9 @@
     background: var(--surface); border: 1px solid var(--border);
     border-radius: var(--radius-sm); padding: 11px 16px;
   }
-  .score-row.active-team { border-color: var(--yellow); background: rgba(250,204,21,.07); }
+  .score-row.active-team { border-color: var(--accent); background: rgba(250,204,21,.07); }
   .score-name { font-weight: 700; font-size: .95rem; display: flex; align-items: center; gap: 6px; }
-  .score-val  { font-weight: 900; font-size: 1.15rem; color: var(--yellow); }
+  .score-val  { font-weight: 900; font-size: 1.15rem; color: var(--accent); }
 
   /* ===== SCREEN 3: GAME ===== */
   #screen-game {
@@ -263,7 +263,7 @@
   .all-scores-title { font-size: .73rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; font-weight: 700; margin-bottom: 9px; width: 100%; }
 
   .progress-bar-wrap { width: 100%; height: 6px; background: var(--surface2); border-radius: 3px; margin-bottom: 16px; overflow: hidden; }
-  .progress-bar-fill { height: 100%; background: linear-gradient(90deg, var(--yellow), var(--green)); border-radius: 3px; transition: width .5s ease; }
+  .progress-bar-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--green)); border-radius: 3px; transition: width .5s ease; }
 
   /* ===== SCREEN 5: WINNER ===== */
   #screen-winner { justify-content: center; align-items: center; padding: 24px 20px 48px; gap: 0; background: radial-gradient(ellipse at 50% 40%, #1f2a0a 0%, var(--bg) 65%); text-align: center; }
@@ -277,10 +277,10 @@
   .winner-score  { font-size: 1.1rem; color: var(--text-dim); font-weight: 700; margin-bottom: 28px; }
   .winner-podium { width: 100%; display: flex; flex-direction: column; gap: 8px; margin-bottom: 24px; }
   .podium-row { display: flex; align-items: center; justify-content: space-between; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 13px 16px; }
-  .podium-row.first-place { border-color: var(--yellow); background: rgba(250,204,21,.09); }
+  .podium-row.first-place { border-color: var(--accent); background: rgba(250,204,21,.09); }
   .podium-rank  { font-size: 1.1rem; width: 26px; text-align: center; }
   .podium-name  { flex: 1; font-weight: 700; font-size: .95rem; padding: 0 10px; display: flex; align-items: center; gap: 6px; }
-  .podium-score { font-size: 1.15rem; font-weight: 900; color: var(--yellow); }
+  .podium-score { font-size: 1.15rem; font-weight: 900; color: var(--accent); }
 
   /* ===== PICKER BOTTOM SHEET ===== */
   #picker-backdrop {
@@ -318,7 +318,7 @@
     transition: transform .15s, border-color .15s;
   }
   .emoji-option:active   { transform: scale(.88); }
-  .emoji-option.selected { border-color: var(--yellow); background: rgba(250,204,21,.12); }
+  .emoji-option.selected { border-color: var(--accent); background: rgba(250,204,21,.12); }
 
   /* ===== HOME FOOTER ===== */
   .home-footer {
@@ -377,7 +377,7 @@
   }
   .rules-item .ri-icon { font-size: 1.2rem; flex-shrink: 0; margin-top: 1px; }
   .rules-item .ri-text { font-size: .92rem; color: var(--text); line-height: 1.5; }
-  .rules-item .ri-text strong { color: var(--yellow); }
+  .rules-item .ri-text strong { color: var(--accent); }
 
   .about-link {
     display: flex; align-items: center; justify-content: space-between;
@@ -385,7 +385,7 @@
     border-radius: 12px; padding: 14px 16px; margin-bottom: 10px;
     text-decoration: none; color: var(--text); transition: border-color .15s;
   }
-  .about-link:active { border-color: var(--yellow); }
+  .about-link:active { border-color: var(--accent); }
   .about-link-label { font-size: .95rem; font-weight: 700; }
   .about-link-sub   { font-size: .78rem; color: var(--text-dim); margin-top: 2px; }
   .about-link-arrow { font-size: 1rem; color: var(--text-dim); }
@@ -399,8 +399,8 @@
 <!-- GLOBAL PAGE HEADER                                          -->
 <!-- ============================================================ -->
 <div id="page-header" class="page-header" style="display:none">
-  <button class="page-header-title" onclick="goHomeFromHeader()">נחש ת׳מילה</button>
-  <div id="header-left-slot"></div>
+  <button class="page-header-title" onclick="goHome()">נחש ת׳מילה</button>
+  <div id="header-slot"></div>
 </div>
 
 <!-- ============================================================ -->
@@ -431,7 +431,7 @@
 </div>
 
 <!-- ===================== SCREEN 1: START (SPLASH) ===================== -->
-<div id="screen-start" class="screen active">
+<div id="screen-home" class="screen active">
 
   <!-- Icon-only info button top-left -->
   <button type="button" class="home-help-btn" onclick="openInfo('rules')">
@@ -700,10 +700,10 @@ let pickerState = { type: null, teamIndex: null };
 
 // ========================= INIT =========================
 window.addEventListener('DOMContentLoaded', () => {
-  // Initialize display system — show only screen-start
+  // Initialize display system — show only screen-home
   SCREEN_IDS.forEach(sid => {
     const el = document.getElementById(sid);
-    if (el) el.style.display = sid === 'screen-start' ? 'flex' : 'none';
+    if (el) el.style.display = sid === 'screen-home' ? 'flex' : 'none';
   });
   // Random emoji for each of the 6 default teams
   teamSetup.emojis = Array.from({ length: 6 }, () =>
@@ -713,27 +713,28 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
 // ========================= HEADER =========================
-function setHeader(show, leftHTML) {
+function setHeader(visible, slotHtml) {
   const hdr  = document.getElementById('page-header');
-  const slot = document.getElementById('header-left-slot');
-  hdr.style.display = show ? 'flex' : 'none';
-  slot.innerHTML = leftHTML || '<div style="width:72px"></div>';
+  const slot = document.getElementById('header-slot');
+  hdr.style.display = visible ? 'flex' : 'none';
+  slot.innerHTML = slotHtml || '<div style="width:72px"></div>';
+}
+function helpBtn() {
+  return `<button type="button" class="header-btn" onclick="openInfo('rules')"><iconify-icon icon="mdi:help-circle-outline"></iconify-icon> כללים</button>`;
 }
 
-function goHomeFromHeader() {
+function goHome() {
   if (!confirm('לחזור לדף הבית? המשחק הנוכחי יאופס.')) return;
   clearInterval(gameState.timer);
   setHeader(false, '');
-  showScreen('screen-start');
+  showScreen('screen-home');
 }
 
 function goToSettings() {
   updateTeamInputs(); // ensure team inputs are rendered
-  setHeader(true, HELP_BTN);
+  setHeader(true, helpBtn());
   showScreen('screen-settings');
 }
-
-const HELP_BTN = `<button type="button" class="header-btn" onclick="openInfo('rules')"><iconify-icon icon="mdi:help-circle-outline"></iconify-icon> כללים</button>`;
 
 // ========================= TEAM INPUTS =========================
 function saveCurrentNames() {
@@ -846,8 +847,8 @@ function startGame() {
       gameState.teamEmojis.push(teamSetup.emojis[i]);
       gameState.scores.push(0);
     }
-    gameState.roundTime   = Math.max(20, parseInt(document.getElementById('round-time').value) || 60);
-    gameState.targetScore = Math.max(10, parseInt(document.getElementById('target-score').value) || 30);
+    gameState.roundTime   = Math.max(20, Math.min(180, parseInt(document.getElementById('round-time').value) || 60));
+    gameState.targetScore = Math.max(10, Math.min(200, parseInt(document.getElementById('target-score').value) || 30));
     gameState.currentTeamIndex = 0;
     gameState.words = shuffle([...ALL_WORDS]);
     gameState.currentWordIndex = 0;
@@ -859,7 +860,7 @@ function startGame() {
 }
 
 // ========================= SCREENS =========================
-const SCREEN_IDS = ['screen-start','screen-settings','screen-transfer','screen-game','screen-endturn','screen-winner'];
+const SCREEN_IDS = ['screen-home','screen-settings','screen-transfer','screen-game','screen-endturn','screen-winner'];
 
 function showScreen(id) {
   SCREEN_IDS.forEach(sid => {
@@ -876,7 +877,7 @@ function showTransfer() {
   el.textContent = `${gameState.teamEmojis[idx]} ${gameState.teams[idx]}`;
   el.style.color = gameState.teamColors[idx];
   renderScoresPreview('scores-preview');
-  setHeader(true, HELP_BTN);
+  setHeader(true, helpBtn());
   showScreen('screen-transfer');
 }
 
@@ -1015,7 +1016,7 @@ function endTurn() {
   document.getElementById('winner-progress-fill').style.width =
     Math.min(100, (leading / gameState.targetScore) * 100) + '%';
 
-  setHeader(true, HELP_BTN);
+  setHeader(true, helpBtn());
   showScreen('screen-endturn');
 }
 
@@ -1053,31 +1054,17 @@ function showWinner(idx) {
     </div>
   `).join('');
 
-  setHeader(true, HELP_BTN);
+  setHeader(true, helpBtn());
   launchConfetti();
   vibrate([200,100,200,100,400]);
   showScreen('screen-winner');
 }
 
-// ========================= HOME / NEW GAME =========================
-function goHome() {
-  if (!confirm('לחזור לדף הבית? המשחק הנוכחי יאופס.')) return;
-  clearInterval(gameState.timer);
-  setHeader(false, '');
-  showScreen('screen-start');
-}
-
+// ========================= NEW GAME =========================
 function newGame() {
   clearInterval(gameState.timer);
   setHeader(false, '');
-  showScreen('screen-start');
-}
-
-function goHome() {
-  if (!confirm('לחזור לדף הבית? המשחק הנוכחי יאופס.')) return;
-  clearInterval(gameState.timer);
-  setHeader(false, '');
-  showScreen('screen-start');
+  showScreen('screen-home');
 }
 
 // ========================= CONFETTI =========================
@@ -1139,7 +1126,7 @@ const INFO_CONTENT = {
       </div>
       <iconify-icon icon="mdi:open-in-new" class="about-link-arrow"></iconify-icon>
     </a>
-    <div class="about-tm">נחש ת׳מילה © 2026<br>כל הזכויות שמורות ל-Loteman Games</div>`
+    <div class="about-tm">נחש ת׳מילה © ${new Date().getFullYear()}<br>כל הזכויות שמורות ל-Loteman Games</div>`
 };
 
 let currentInfoTab = 'rules';
