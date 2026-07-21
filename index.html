@@ -85,6 +85,7 @@
     cursor: pointer; transition: transform .12s, filter .12s; letter-spacing: 0.3px;
   }
   .btn:active { transform: scale(.96); filter: brightness(.88); }
+  .btn:hover, .btn:active { outline: 2px solid var(--yellow); outline-offset: 2px; }
   .btn-primary { background: var(--yellow); color: #0d0d14; }
   .btn-green   { background: var(--green);  color: #fff; }
   .btn-red     { background: var(--red);    color: #fff; }
@@ -123,7 +124,12 @@
   .home-help-btn iconify-icon { font-size: 1.1rem; width: 1.1rem; height: 1.1rem; pointer-events: none; }
 
   /* All screens get enough top breathing room; has-header gets exactly the header height */
-  #screen-start { padding: 20px 20px 44px; gap: 0; background: var(--bg); }
+  #screen-start { padding: 0; gap: 0; background: var(--bg); }
+
+  .splash-desc {
+    font-size: 1rem; color: var(--text-dim); text-align: center;
+    line-height: 1.65; margin-top: 16px; max-width: 320px;
+  }
 
   .logo { text-align: center; margin: 12px 0 24px; }
   .logo-text {
@@ -424,58 +430,75 @@
   <div id="picker-content"></div>
 </div>
 
-<!-- ===================== SCREEN 1: START ===================== -->
+<!-- ===================== SCREEN 1: START (SPLASH) ===================== -->
 <div id="screen-start" class="screen active">
 
-  <!-- Icon-only info button top-left, visible only on home screen -->
+  <!-- Icon-only info button top-left -->
   <button type="button" class="home-help-btn" onclick="openInfo('rules')">
     <iconify-icon icon="mdi:help-circle-outline"></iconify-icon>
   </button>
-  <div class="logo">
-    <div class="logo-text">נחש ת׳מילה</div>
-    <div class="logo-sub">מסביר · מנחש · מנצח</div>
-  </div>
 
-  <div class="form-section" style="margin-bottom:12px">
-    <label>מספר קבוצות</label>
-    <select id="num-teams" onchange="onNumTeamsChange()">
-      <option value="2">2 קבוצות</option>
-      <option value="3">3 קבוצות</option>
-      <option value="4">4 קבוצות</option>
-      <option value="5">5 קבוצות</option>
-      <option value="6">6 קבוצות</option>
-    </select>
-  </div>
+  <!-- Centered content -->
+  <div style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; width:100%; padding: 0 24px;">
+    <div class="logo">
+      <div class="logo-text">נחש ת׳מילה</div>
+      <div class="logo-sub">מסביר · מנחש · מנצח</div>
+    </div>
+    <p class="splash-desc">משחק הסבר וניחוש לקבוצות<br>מסבירים מילים, מנצחים ראשונים!</p>
 
-  <div class="form-section" style="margin-bottom:12px">
-    <label>שמות הקבוצות</label>
-    <div class="teams-grid" id="team-inputs"></div>
-  </div>
-
-  <div class="form-section" style="margin-bottom:20px">
-    <label>הגדרות משחק</label>
-    <div class="settings-row">
-      <div class="setting-box">
-        <label><iconify-icon icon="mdi:timer-outline"></iconify-icon> שניות לתור</label>
-        <!-- FIX: step="5" so arrows jump by 5 -->
-        <input type="number" id="round-time" value="60" min="20" max="180" step="5">
-      </div>
-      <div class="setting-box">
-        <label><iconify-icon icon="mdi:trophy-outline"></iconify-icon> נקודות לניצחון</label>
-        <!-- FIX: step="5" so arrows jump by 5 -->
-        <input type="number" id="target-score" value="30" min="10" max="200" step="5">
+    <div style="width:100%; margin-top:32px;">
+      <button type="button" class="btn btn-primary" onclick="goToSettings()">
+        <iconify-icon icon="mdi:play-circle-outline"></iconify-icon> התחילו משחק!
+      </button>
+      <div class="home-footer">
+        <button class="footer-link" onclick="openInfo('rules')"><iconify-icon icon="mdi:help-circle-outline"></iconify-icon> איך משחקים</button>
+        <span class="footer-sep">·</span>
+        <button class="footer-link" onclick="openInfo('about')"><iconify-icon icon="mdi:information-outline"></iconify-icon> אודות</button>
       </div>
     </div>
   </div>
+</div>
 
-  <div style="width:100%">
-    <button type="button" class="btn btn-primary" onclick="startGame()"><iconify-icon icon="mdi:gamepad-variant-outline"></iconify-icon> התחל משחק!</button>
-  </div>
+<!-- ===================== SCREEN 1b: SETTINGS ===================== -->
+<div id="screen-settings" class="screen has-header">
+  <div style="width:100%; padding: 20px 20px 44px; display:flex; flex-direction:column; align-items:center; gap:0;">
 
-  <div class="home-footer">
-    <button class="footer-link" onclick="openInfo('rules')"><iconify-icon icon="mdi:help-circle-outline"></iconify-icon> איך משחקים</button>
-    <span class="footer-sep">·</span>
-    <button class="footer-link" onclick="openInfo('about')"><iconify-icon icon="mdi:information-outline"></iconify-icon> אודות</button>
+    <div class="form-section" style="margin-bottom:12px">
+      <label>מספר קבוצות</label>
+      <select id="num-teams" onchange="onNumTeamsChange()">
+        <option value="2">2 קבוצות</option>
+        <option value="3">3 קבוצות</option>
+        <option value="4">4 קבוצות</option>
+        <option value="5">5 קבוצות</option>
+        <option value="6">6 קבוצות</option>
+      </select>
+    </div>
+
+    <div class="form-section" style="margin-bottom:12px">
+      <label>שמות הקבוצות</label>
+      <div class="teams-grid" id="team-inputs"></div>
+    </div>
+
+    <div class="form-section" style="margin-bottom:28px">
+      <label>הגדרות משחק</label>
+      <div class="settings-row">
+        <div class="setting-box">
+          <label><iconify-icon icon="mdi:timer-outline"></iconify-icon> שניות לתור</label>
+          <input type="number" id="round-time" value="60" min="20" max="180" step="5">
+        </div>
+        <div class="setting-box">
+          <label><iconify-icon icon="mdi:trophy-outline"></iconify-icon> נקודות לניצחון</label>
+          <input type="number" id="target-score" value="30" min="10" max="200" step="5">
+        </div>
+      </div>
+    </div>
+
+    <div style="width:100%">
+      <button type="button" class="btn btn-primary" onclick="startGame()">
+        <iconify-icon icon="mdi:arrow-left-circle-outline"></iconify-icon> יאללה, משחקים!
+      </button>
+    </div>
+
   </div>
 </div>
 
@@ -704,7 +727,13 @@ function goHomeFromHeader() {
   showScreen('screen-start');
 }
 
-const HELP_BTN = `<button type="button" class="header-btn" onclick="openInfo('rules')"><iconify-icon icon="mdi:help-circle-outline"></iconify-icon> מידע</button>`;
+function goToSettings() {
+  updateTeamInputs(); // ensure team inputs are rendered
+  setHeader(true, HELP_BTN);
+  showScreen('screen-settings');
+}
+
+const HELP_BTN = `<button type="button" class="header-btn" onclick="openInfo('rules')"><iconify-icon icon="mdi:help-circle-outline"></iconify-icon> כללים</button>`;
 
 // ========================= TEAM INPUTS =========================
 function saveCurrentNames() {
@@ -830,7 +859,7 @@ function startGame() {
 }
 
 // ========================= SCREENS =========================
-const SCREEN_IDS = ['screen-start','screen-transfer','screen-game','screen-endturn','screen-winner'];
+const SCREEN_IDS = ['screen-start','screen-settings','screen-transfer','screen-game','screen-endturn','screen-winner'];
 
 function showScreen(id) {
   SCREEN_IDS.forEach(sid => {
@@ -1039,6 +1068,13 @@ function goHome() {
 }
 
 function newGame() {
+  clearInterval(gameState.timer);
+  setHeader(false, '');
+  showScreen('screen-start');
+}
+
+function goHome() {
+  if (!confirm('לחזור לדף הבית? המשחק הנוכחי יאופס.')) return;
   clearInterval(gameState.timer);
   setHeader(false, '');
   showScreen('screen-start');
