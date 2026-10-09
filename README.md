@@ -1,6 +1,6 @@
 # GuessWord
 Guess the Word, a pass & play game.
 
-[https://loteman.github.io/GuessWord/](https://loteman.github.io/GuessWord/)
+[https://guessword.loteman.com/](https://guessword.loteman.com/)
 
-Game By [LotemanGames](https://loteman.github.io/Loteman-Games/)
+Game By [LotemanGames](https://games.loteman.com/)
