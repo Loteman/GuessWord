@@ -2,7 +2,7 @@
 <html lang="he" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, interactive-widget=resizes-content">
 <title>נחש ת'מילה 🗣️</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🗣️</text></svg>">
 <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js" async></script>
@@ -25,7 +25,7 @@
 <!-- INFO BOTTOM SHEET (how-to-play + about)                    -->
 <!-- ============================================================ -->
 <div id="info-backdrop" onclick="closeInfo()"></div>
-<div id="info-sheet">
+<div id="info-sheet" role="dialog" aria-modal="true" aria-label="מידע על המשחק">
   <div class="info-handle"></div>
   <div class="info-tabs">
     <button type="button" class="info-tab active" id="tab-rules" onclick="switchInfoTab('rules')">
@@ -39,7 +39,7 @@
 </div>
 
 <div id="picker-backdrop" onclick="closePicker()"></div>
-<div id="picker-sheet">
+<div id="picker-sheet" role="dialog" aria-modal="true" aria-label="בחירה">
   <div class="picker-handle"></div>
   <div class="picker-title" id="picker-title"></div>
   <div id="picker-content"></div>
@@ -49,7 +49,7 @@
 <div id="screen-home" class="screen active">
 
   <!-- Icon-only info button top-left -->
-  <button type="button" class="home-help-btn" onclick="openInfo('rules')">
+  <button type="button" class="home-help-btn" aria-label="איך משחקים" onclick="openInfo('rules')">
     <iconify-icon icon="mdi:help-circle-outline"></iconify-icon>
   </button>
 

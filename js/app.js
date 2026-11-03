@@ -110,7 +110,7 @@ let gameState = {
   currentTeamIndex: 0,
   roundScore: 0, roundCorrect: 0, roundSkip: 0, roundWrong: 0,
   roundTime: 60, targetScore: 30,
-  timer: null, timeLeft: 60,
+  timer: null, timeLeft: 60, deadline: 0,
   words: [], currentWordIndex: 0,
   roundWordCount: 0,
 };
@@ -120,11 +120,6 @@ let pickerState = { type: null, teamIndex: null };
 
 // ========================= INIT =========================
 window.addEventListener('DOMContentLoaded', () => {
-  // Initialize display system — show only screen-home
-  SCREEN_IDS.forEach(sid => {
-    const el = document.getElementById(sid);
-    if (el) el.style.display = sid === 'screen-home' ? 'flex' : 'none';
-  });
   // Random emoji for each of the 6 default teams
   teamSetup.emojis = Array.from({ length: 6 }, () =>
     EMOJI_POOL[Math.floor(Math.random() * EMOJI_POOL.length)]
@@ -144,7 +139,8 @@ function helpBtn() {
 }
 
 function goHome() {
-  if (!confirm('לחזור לדף הבית? המשחק הנוכחי יאופס.')) return;
+  const cur = document.querySelector('.screen.active');
+  if (!(cur && cur.id === 'screen-winner') && !confirm('לחזור לדף הבית? המשחק הנוכחי יאופס.')) return;
   clearInterval(gameState.timer);
   setHeader(false, '');
   showScreen('screen-home');
@@ -193,8 +189,8 @@ function updateTeamInputs() {
     row.className = 'team-input-row';
     row.id = `team-row-${i}`;
     row.innerHTML = `
-      <button class="team-emoji-btn" onclick="openPicker('emoji',${i})">${teamSetup.emojis[i]}</button>
-      <div class="team-color-dot" id="color-dot-${i}"
+      <button type="button" class="team-emoji-btn" aria-label="בחירת אימוג׳י לקבוצה ${i + 1}" onclick="openPicker('emoji',${i})">${teamSetup.emojis[i]}</button>
+      <div class="team-color-dot" id="color-dot-${i}" role="button" tabindex="0" aria-label="בחירת צבע לקבוצה ${i + 1}"
            style="background:${teamSetup.colors[i]}"
            onclick="openPicker('color',${i})"></div>
       <input type="text" placeholder="${TEAM_DEFAULT_NAMES[i] || `קבוצה ${i+1}`}"
@@ -218,7 +214,7 @@ function openPicker(type, teamIndex) {
       COLOR_POOL.map(c => {
         const taken    = takenByOthers.includes(c);
         const selected = teamSetup.colors[teamIndex] === c;
-        return `<div class="color-swatch ${taken ? 'taken' : ''} ${selected ? 'selected' : ''}"
+        return `<div class="color-swatch ${taken ? 'taken' : ''} ${selected ? 'selected' : ''}" role="button" tabindex="${taken ? -1 : 0}" aria-label="צבע" aria-disabled="${taken}"
           style="background:${c}"
           onclick="${taken ? 'void 0' : `selectColor('${c}',${teamIndex})`}"></div>`;
       }).join('') + '</div>';
@@ -226,7 +222,7 @@ function openPicker(type, teamIndex) {
     title.textContent = 'בחר אימוג׳י לקבוצה';
     content.innerHTML = '<div class="emoji-grid">' +
       EMOJI_POOL.map(e =>
-        `<div class="emoji-option ${teamSetup.emojis[teamIndex] === e ? 'selected' : ''}"
+        `<div class="emoji-option ${teamSetup.emojis[teamIndex] === e ? 'selected' : ''}" role="button" tabindex="0" aria-label="${e}"
           onclick="selectEmoji('${e}',${teamIndex})">${e}</div>`
       ).join('') + '</div>';
   }
@@ -266,7 +262,7 @@ function startGame() {
     gameState.teamEmojis = [];
     gameState.scores     = [];
     for (let i = 0; i < n; i++) {
-      gameState.teams.push(teamSetup.names[i] || TEAM_DEFAULT_NAMES[i]);
+      gameState.teams.push((teamSetup.names[i] || '').trim() || TEAM_DEFAULT_NAMES[i]);
       gameState.teamColors.push(teamSetup.colors[i]);
       gameState.teamEmojis.push(teamSetup.emojis[i]);
       gameState.scores.push(0);
@@ -284,14 +280,11 @@ function startGame() {
 }
 
 // ========================= SCREENS =========================
-const SCREEN_IDS = ['screen-home','screen-settings','screen-transfer','screen-game','screen-endturn','screen-winner'];
-
 function showScreen(id) {
-  SCREEN_IDS.forEach(sid => {
-    const el = document.getElementById(sid);
-    if (el) el.style.display = (sid === id) ? 'flex' : 'none';
-  });
-  try { window.scrollTo(0, 0); } catch(e) {}
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  const el = document.getElementById(id);
+  el.classList.add('active');
+  el.scrollTop = 0;
 }
 
 // ========================= TRANSFER =========================
@@ -350,11 +343,14 @@ function abortTurn() {
 // ========================= TIMER =========================
 function startTimer() {
   clearInterval(gameState.timer);
+  gameState.deadline = Date.now() + gameState.timeLeft * 1000;
   gameState.timer = setInterval(() => {
-    gameState.timeLeft--;
+    const left = Math.max(0, Math.ceil((gameState.deadline - Date.now()) / 1000));
+    if (left === gameState.timeLeft) return;
+    gameState.timeLeft = left;
     updateTimer();
-    if (gameState.timeLeft <= 0) { clearInterval(gameState.timer); endTurn(); }
-  }, 1000);
+    if (left <= 0) { clearInterval(gameState.timer); endTurn(); }
+  }, 250);
 }
 
 function updateTimer() {
@@ -604,6 +600,15 @@ function openInfo(type) {
     document.getElementById('info-sheet').classList.add('open');
   }
 }
+
+// Keyboard: Enter / Space activate the div-buttons, Escape closes sheets
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') { closePicker(); closeInfo(); return; }
+  if ((e.key === 'Enter' || e.key === ' ') && e.target.getAttribute && e.target.getAttribute('role') === 'button') {
+    e.preventDefault();
+    e.target.click();
+  }
+});
 
 function switchInfoTab(type) {
   // Sheet already open — switch content without re-animating

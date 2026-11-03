@@ -77,7 +77,8 @@
     cursor: pointer; transition: transform .12s, filter .12s; letter-spacing: 0.3px;
   }
   .btn:active { transform: scale(.96); filter: brightness(.88); }
-  .btn:hover, .btn:active { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .btn:active { outline: 2px solid var(--accent); outline-offset: 2px; }
+  @media (hover: hover) { .btn:hover { outline: 2px solid var(--accent); outline-offset: 2px; } }
   .btn-primary { background: var(--accent); color: #0d0d14; }
   .btn-green   { background: var(--green);  color: #fff; }
   .btn-red     { background: var(--red);    color: #fff; }
@@ -112,7 +113,7 @@
     transition: filter .1s, border-color .15s, color .15s;
   }
   .home-help-btn:active { filter: brightness(.85); }
-  .home-help-btn:hover  { border-color: var(--accent); color: var(--accent); }
+  @media (hover: hover) { .home-help-btn:hover { border-color: var(--accent); color: var(--accent); } }
   .home-help-btn iconify-icon { font-size: 1.1rem; width: 1.1rem; height: 1.1rem; pointer-events: none; }
 
   /* All screens get enough top breathing room; has-header gets exactly the header height */
@@ -154,7 +155,7 @@
     transition: transform .15s, box-shadow .15s;
   }
   .team-color-dot:active { transform: scale(.85); }
-  .team-color-dot:hover  { box-shadow: 0 0 0 3px rgba(255,255,255,.15); }
+  @media (hover: hover) { .team-color-dot:hover { box-shadow: 0 0 0 3px rgba(255,255,255,.15); } }
   .team-input-row input  { background: transparent; border: none; padding: 10px 0; font-size: 1rem; flex: 1; }
   .team-input-row input:focus { border: none; }
 
@@ -170,7 +171,7 @@
 
   /* ===== SCREEN 2: TRANSFER ===== */
   #screen-transfer {
-    justify-content: center; padding: 24px; gap: 0;
+    justify-content: flex-start; padding: 24px; gap: 0;
     background: radial-gradient(ellipse at 50% 30%, #1a1a2e 0%, var(--bg) 70%);
   }
   .transfer-emoji { font-size: 4.5rem; text-align: center; margin-bottom: 18px; animation: bounce 1.6s ease-in-out infinite; }
@@ -192,7 +193,7 @@
   #screen-game {
     justify-content: space-between;
     background: var(--bg);
-    overflow: hidden; /* never scroll — everything must fit in view */
+    overflow-x: hidden; overflow-y: auto; /* scrolls only on very short viewports */
     padding: 0;
   }
 
@@ -258,7 +259,7 @@
   .progress-bar-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--green)); border-radius: 3px; transition: width .5s ease; }
 
   /* ===== SCREEN 5: WINNER ===== */
-  #screen-winner { justify-content: center; align-items: center; padding: 24px 20px 48px; gap: 0; background: radial-gradient(ellipse at 50% 40%, #1f2a0a 0%, var(--bg) 65%); text-align: center; }
+  #screen-winner { justify-content: flex-start; align-items: center; padding: 24px 20px 48px; gap: 0; background: radial-gradient(ellipse at 50% 40%, #1f2a0a 0%, var(--bg) 65%); text-align: center; }
   .confetti-area  { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
   .confetti-piece { position: absolute; width: 10px; height: 10px; border-radius: 2px; animation: confetti-fall linear forwards; opacity: 0; }
   @keyframes confetti-fall { 0%{transform:translateY(-20px) rotate(0deg);opacity:1} 100%{transform:translateY(110vh) rotate(720deg);opacity:.2} }
@@ -323,7 +324,8 @@
     cursor: pointer; padding: 6px 10px; border-radius: 8px;
     transition: color .15s, background .15s; letter-spacing: .2px;
   }
-  .footer-link:active, .footer-link:hover { color: var(--text); background: var(--surface2); }
+  .footer-link:active { color: var(--text); background: var(--surface2); }
+  @media (hover: hover) { .footer-link:hover { color: var(--text); background: var(--surface2); } }
   .footer-sep { color: var(--border); font-size: .9rem; user-select: none; }
 
   /* ===== INFO BOTTOM SHEET ===== */
@@ -396,10 +398,19 @@
     transition: transform .12s, border-color .15s, filter .12s;
   }
   .game-tile:active { transform: scale(.96); filter: brightness(.9); }
-  .game-tile:hover, .game-tile:active { border-color: var(--text-dim); }
+  .game-tile:active { border-color: var(--text-dim); }
+  @media (hover: hover) { .game-tile:hover { border-color: var(--text-dim); } }
   .tile-emoji { font-size: 1.8rem; line-height: 1; }
   .tile-name { font-size: .85rem; font-weight: 900; text-align: center; }
   .tile-imposter .tile-name  { background: linear-gradient(90deg, #FF5733 0%, #C02B46 50%, #7D135B 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
   .tile-alias .tile-name     { background: linear-gradient(135deg, #facc15 0%, #f97316 50%, #ef4444 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
   .tile-category .tile-name  { background: linear-gradient(135deg, #a855f7 0%, #6366f1 50%, #22d3ee 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
   .tile-hirtotim .tile-name  { background: linear-gradient(135deg, #14b8a6 0%, #0ea5e9 55%, #6366f1 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+
+  /* ===== VERTICALLY CENTERED SCREENS =====
+     Spacers instead of justify-content:center, so content taller than the
+     viewport starts at the top and stays scrollable instead of being clipped. */
+  #screen-transfer::before, #screen-transfer::after,
+  #screen-winner::before, #screen-winner::after {
+    content: ''; flex: 1 0 0;
+  }
