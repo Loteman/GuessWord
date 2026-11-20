@@ -579,6 +579,13 @@ const INFO_CONTENT = {
         </div>
         <iconify-icon icon="mdi:open-in-new" class="about-link-arrow"></iconify-icon>
       </a>
+      <a class="about-link" href="/privacy" target="_blank" rel="noopener">
+        <div>
+          <div class="about-link-label"><iconify-icon icon="mdi:shield-lock-outline"></iconify-icon> מדיניות פרטיות</div>
+          <div class="about-link-sub">איזה מידע נאסף (כמעט אף אחד)</div>
+        </div>
+        <iconify-icon icon="mdi:open-in-new" class="about-link-arrow"></iconify-icon>
+      </a>
       <div class="about-tm">נחש ת׳מילה © ${new Date().getFullYear()}<br>כל הזכויות שמורות ל-Loteman Games</div>
     </div>`
 };
